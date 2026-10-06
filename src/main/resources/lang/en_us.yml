@@ -34,6 +34,8 @@ private:
   reply-usage: '<error>Usage: <accent>/r \<message>'
   offline: "<error><accent><player></accent> is not online."
   failed: "<error>Your message could not be delivered to <accent><player></accent> (link between servers is down). Try again in a moment."
+  disabled: "<error><accent><player></accent> doesn't accept private messages."
+  own-disabled: "<info>Your private messages are blocked: <accent><player></accent> won't be able to reply. <dark_gray>(</dark_gray><accent>/msgtoggle</accent><dark_gray>)"
   no-reply: "<error>Nobody to reply to."
   self: "<error>You can't message yourself."
   error: "<error>Something went wrong, please try again later."
@@ -43,17 +45,84 @@ ignore:
   empty: '<info>You are not ignoring anyone. <dark_gray>(</dark_gray><accent>/ignore \<player></accent><dark_gray>)'
   added: "<info>You are now ignoring <accent><player></accent>: you won't see their messages anymore."
   removed: "<info>You are no longer ignoring <accent><player></accent>."
+  already: "<info>You are already ignoring <accent><player></accent>."
   self: "<error>You can't ignore yourself."
   unknown: "<error>Unknown player: <accent><player></accent>."
+  error: "<error>Something went wrong, please try again later."
+
+private-messages:
+  enabled: "<info>Private messages <success>accepted</success>."
+  disabled: "<info>Private messages <error>blocked</error>: nobody can message you anymore, except the staff."
 
 notifications:
-  on: "<info>Mention and private message sound and alert <success>enabled</success>."
-  off: "<info>Mention and private message sound and alert <error>muted</error>."
+  enabled: "<info>Mention and private message sound and alert <success>enabled</success>."
+  disabled: "<info>Mention and private message sound and alert <error>muted</error>."
 
 socialspy:
-  on: "<info>Private message spy <success>enabled</success>."
-  off: "<info>Private message spy <error>disabled</error>."
+  enabled: "<info>Private message spy <success>enabled</success>."
+  disabled: "<info>Private message spy <error>disabled</error>."
 
 staff:
-  on: "<info>Your chat now goes to the <accent>staff</accent> channel. <dark_gray>(</dark_gray><accent>/sc</accent> <info>to switch back</info><dark_gray>)"
-  off: "<info>Your chat is back in <accent>global</accent>."
+  enabled: "<info>Your chat now goes to the <accent>staff</accent> channel. <dark_gray>(</dark_gray><accent>/sc</accent> <info>to switch back</info><dark_gray>)"
+  disabled: "<info>Your chat is back in <accent>global</accent>."
+
+# Dialog windows of the /chat menu
+dialog:
+  cancel: "Cancel"
+  ignore:
+    title: "<primary>Ignore a player"
+    body: "You won't see their messages anymore, neither in chat nor in private. They won't be told."
+    name: "Player name"
+    confirm: "Ignore"
+  unignore:
+    title: "<primary>Stop ignoring"
+    body: "See messages from <player> again?"
+    confirm: "<success>Confirm"
+
+# /chat menu
+gui:
+  title: "<primary>Chat settings"
+  back: "<accent>« Back"
+  previous: "<accent>« Previous page"
+  next: "<accent>Next page »"
+  page: "<info>Page <accent><page></accent>/<accent><pages>"
+  click-toggle: "<accent>Click <dark_gray>· <info>turn on / off"
+  state:
+    enabled: "<success>● <info>Enabled"
+    disabled: "<error>● <info>Disabled"
+    short-on: "<success>enabled"
+    short-off: "<error>disabled"
+  channel:
+    global: "<accent>global"
+    staff: "<accent>staff"
+  info:
+    name: "<accent><player>"
+    private-messages: "<dark_gray>▸ <info>Private messages: "
+    notifications: "<dark_gray>▸ <info>Notifications: "
+    ignored: "<dark_gray>▸ <info>Ignored players: <accent><count>"
+    channel: "<dark_gray>▸ <info>Channel: "
+  private-messages:
+    name: "<accent>Private messages"
+    lore: "<info>Receive /msg from other players"
+  notifications:
+    name: "<accent>Notifications"
+    lore: "<info>Sound and alert when someone mentions or messages you"
+  staff:
+    name: "<accent>Staff channel"
+    lore: "<info>Everything you type goes to the staff"
+  socialspy:
+    name: "<accent>Spy"
+    lore: "<info>See private messages across the network"
+  ignored:
+    name: "<accent>Ignored players"
+    lore: "<info>Their messages are hidden for you"
+    count: "<dark_gray>▸ <info>You ignore <accent><count>"
+    click: "<accent>Click <dark_gray>· <info>see the list"
+  ignored-menu:
+    title: "<primary>Ignored players"
+    player: "<accent><player>"
+    unignore: "<accent>Click <dark_gray>· <info>stop ignoring"
+    empty: "<info>You are not ignoring anyone"
+    empty-lore: "<accent>Click <dark_gray>· <info>ignore a player"
+    add: "<accent>Ignore a player"
+    add-lore: "<info>Type their name, even if they are offline"

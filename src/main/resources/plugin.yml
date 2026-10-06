@@ -18,6 +18,13 @@ commands:
     description: Répondre au dernier message privé.
     usage: /r <message>
     aliases: [r]
+  chat:
+    description: Menu des réglages du chat (messages privés, notifications, joueurs ignorés...).
+    usage: /chat
+    aliases: [chatsettings]
+  msgtoggle:
+    description: Refuser ou accepter de nouveau les messages privés.
+    usage: /msgtoggle
   ignore:
     description: Ignorer un joueur (ou ne plus l'ignorer) ; seul, affiche la liste.
     usage: /ignore [joueur]
@@ -49,6 +56,9 @@ permissions:
   eterchat.socialspy:
     description: Voir les messages privés de tout le réseau (/socialspy).
     default: op
+  eterchat.bypass.msgtoggle:
+    description: Écrire en privé à un joueur même s'il a coupé ses messages privés.
+    default: op
   eterchat.admin:
     description: Toutes les permissions d'EterChat.
     default: op
@@ -57,3 +67,4 @@ permissions:
       eterchat.item: true
       eterchat.staff: true
       eterchat.socialspy: true
+      eterchat.bypass.msgtoggle: true

@@ -34,6 +34,8 @@ private:
   reply-usage: '<error>Utilisation : <accent>/r \<message>'
   offline: "<error><accent><player></accent> n'est pas connecté."
   failed: "<error>Ton message n'a pas pu être transmis à <accent><player></accent> (liaison entre serveurs coupée). Réessaie dans un instant."
+  disabled: "<error><accent><player></accent> n'accepte pas les messages privés."
+  own-disabled: "<info>Tes messages privés sont coupés : <accent><player></accent> ne pourra pas te répondre. <dark_gray>(</dark_gray><accent>/msgtoggle</accent><dark_gray>)"
   no-reply: "<error>Personne à qui répondre."
   self: "<error>Tu ne peux pas t'écrire à toi-même."
   error: "<error>Une erreur est survenue, réessaie plus tard."
@@ -43,17 +45,84 @@ ignore:
   empty: '<info>Tu n''ignores personne. <dark_gray>(</dark_gray><accent>/ignore \<joueur></accent><dark_gray>)'
   added: "<info>Tu ignores maintenant <accent><player></accent> : tu ne verras plus ses messages."
   removed: "<info>Tu n'ignores plus <accent><player></accent>."
+  already: "<info>Tu ignores déjà <accent><player></accent>."
   self: "<error>Tu ne peux pas t'ignorer toi-même."
   unknown: "<error>Joueur inconnu : <accent><player></accent>."
+  error: "<error>Une erreur est survenue, réessaie plus tard."
+
+private-messages:
+  enabled: "<info>Messages privés <success>acceptés</success>."
+  disabled: "<info>Messages privés <error>refusés</error> : plus personne ne peut t'écrire, sauf le staff."
 
 notifications:
-  on: "<info>Son et alerte des mentions et messages privés <success>activés</success>."
-  off: "<info>Son et alerte des mentions et messages privés <error>coupés</error>."
+  enabled: "<info>Son et alerte des mentions et messages privés <success>activés</success>."
+  disabled: "<info>Son et alerte des mentions et messages privés <error>coupés</error>."
 
 socialspy:
-  on: "<info>Espion des messages privés <success>activé</success>."
-  off: "<info>Espion des messages privés <error>désactivé</error>."
+  enabled: "<info>Espion des messages privés <success>activé</success>."
+  disabled: "<info>Espion des messages privés <error>désactivé</error>."
 
 staff:
-  on: "<info>Ton chat part maintenant au <accent>staff</accent>. <dark_gray>(</dark_gray><accent>/sc</accent> <info>pour revenir</info><dark_gray>)"
-  off: "<info>Ton chat repart dans le <accent>global</accent>."
+  enabled: "<info>Ton chat part maintenant au <accent>staff</accent>. <dark_gray>(</dark_gray><accent>/sc</accent> <info>pour revenir</info><dark_gray>)"
+  disabled: "<info>Ton chat repart dans le <accent>global</accent>."
+
+# Fenêtres de dialogue du menu /chat
+dialog:
+  cancel: "Annuler"
+  ignore:
+    title: "<primary>Ignorer un joueur"
+    body: "Tu ne verras plus ses messages, ni dans le chat ni en privé. Il n'en sera pas averti."
+    name: "Pseudo"
+    confirm: "Ignorer"
+  unignore:
+    title: "<primary>Ne plus ignorer"
+    body: "Revoir les messages de <player> ?"
+    confirm: "<success>Confirmer"
+
+# Menu /chat
+gui:
+  title: "<primary>Réglages du chat"
+  back: "<accent>« Retour"
+  previous: "<accent>« Page précédente"
+  next: "<accent>Page suivante »"
+  page: "<info>Page <accent><page></accent>/<accent><pages>"
+  click-toggle: "<accent>Clic <dark_gray>· <info>activer / couper"
+  state:
+    enabled: "<success>● <info>Activé"
+    disabled: "<error>● <info>Désactivé"
+    short-on: "<success>activé"
+    short-off: "<error>désactivé"
+  channel:
+    global: "<accent>global"
+    staff: "<accent>staff"
+  info:
+    name: "<accent><player>"
+    private-messages: "<dark_gray>▸ <info>Messages privés : "
+    notifications: "<dark_gray>▸ <info>Notifications : "
+    ignored: "<dark_gray>▸ <info>Joueurs ignorés : <accent><count>"
+    channel: "<dark_gray>▸ <info>Canal : "
+  private-messages:
+    name: "<accent>Messages privés"
+    lore: "<info>Recevoir les /msg des autres joueurs"
+  notifications:
+    name: "<accent>Notifications"
+    lore: "<info>Son et alerte quand on te mentionne ou t'écrit"
+  staff:
+    name: "<accent>Canal staff"
+    lore: "<info>Tout ce que tu écris part au staff"
+  socialspy:
+    name: "<accent>Espion"
+    lore: "<info>Voir les messages privés de tout le réseau"
+  ignored:
+    name: "<accent>Joueurs ignorés"
+    lore: "<info>Leurs messages ne s'affichent plus pour toi"
+    count: "<dark_gray>▸ <info>Tu en ignores <accent><count>"
+    click: "<accent>Clic <dark_gray>· <info>voir la liste"
+  ignored-menu:
+    title: "<primary>Joueurs ignorés"
+    player: "<accent><player>"
+    unignore: "<accent>Clic <dark_gray>· <info>ne plus l'ignorer"
+    empty: "<info>Tu n'ignores personne"
+    empty-lore: "<accent>Clic <dark_gray>· <info>ignorer un joueur"
+    add: "<accent>Ignorer un joueur"
+    add-lore: "<info>Taper son pseudo, même s'il est hors ligne"

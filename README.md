@@ -35,17 +35,33 @@ la console du serveur d'origine le journalise.
 
 | Commande | Rôle | Permission |
 |---|---|---|
+| `/chat` (`chatsettings`) | Menu des réglages (voir plus bas) | — |
 | `/msg <joueur> <message>` (`tell`, `w`, `m`, `whisper`, `pm`) | Message privé, n'importe quel serveur | — |
 | `/r <message>` | Répondre au dernier correspondant | — |
+| `/msgtoggle` | Refuser / accepter de nouveau les messages privés | — |
 | `/ignore [joueur]` | Ignorer / ne plus ignorer (chat global et privés) ; seul : la liste | — |
 | `/notifications` (`notifs`) | Couper ou remettre le son et l'alerte des mentions et messages privés | — |
 | `/staffchat [message]` (`sc`) | Un message au staff ; seul : tout son chat part au staff | `eterchat.staff` |
 | `/socialspy` (`spy`) | Voir les messages privés de tout le réseau | `eterchat.socialspy` |
 
-Autres : `eterchat.color` (couleurs dans ses messages, personne par défaut), `eterchat.item` (`[item]`, tout le monde).
-`eterchat.admin` regroupe tout (op par défaut).
+Autres : `eterchat.color` (couleurs dans ses messages, personne par défaut), `eterchat.item` (`[item]`, tout le monde),
+`eterchat.bypass.msgtoggle` (écrire à un joueur qui refuse les messages privés : le staff doit pouvoir joindre
+n'importe qui). `eterchat.admin` regroupe tout (op par défaut).
+
+Messages privés refusés : vérifié **côté expéditeur** (réglage lu en mémoire si le destinataire est ici, en base sinon),
+pour lui répondre « X n'accepte pas les messages privés » au lieu d'un envoi dans le vide. Le refus d'un joueur
+**ignoré**, lui, reste silencieux.
+
+## Menu /chat
+
+`module/gui` : `ChatMenu` (5 lignes, cadre orange/gris, tête du joueur avec le résumé de ses réglages) : messages privés,
+notifications, joueurs ignorés, et selon les permissions canal staff et espion ; un clic bascule le réglage
+(`PreferenceActions`, partagé avec les commandes). `IgnoredMenu` : têtes des joueurs ignorés, 28 par page ; un clic
+ouvre une confirmation (Dialog) pour ne plus l'ignorer ; « Ignorer un joueur » ouvre un Dialog de saisie du pseudo
+(n'importe quel joueur déjà venu sur le réseau, même hors ligne).
 
 ## Données
 
-- `eterchat_players` : `uuid`, `staff_channel`, `notifications`, `social_spy` (lus à l'arrivée, gardés en mémoire).
+- `eterchat_players` : `uuid`, `staff_channel`, `notifications`, `social_spy`, `private_messages` (lus à l'arrivée,
+  gardés en mémoire). `private_messages` ajoutée en 1.1.0 : `NULL` = acceptés.
 - `eterchat_ignores` : `owner`, `target`, `target_name`. Le canal staff ne s'ignore pas.

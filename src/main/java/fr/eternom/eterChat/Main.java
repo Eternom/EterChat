@@ -5,9 +5,11 @@ import fr.eternom.eterChat.listeners.Events;
 import fr.eternom.eterChat.module.chat.ChatFormatter;
 import fr.eternom.eterChat.module.chat.ChatService;
 import fr.eternom.eterChat.module.chat.Ranks;
+import fr.eternom.eterChat.module.gui.ChatGui;
 import fr.eternom.eterChat.module.message.PlayerNames;
 import fr.eternom.eterChat.module.message.PrivateMessages;
 import fr.eternom.eterChat.module.preference.ChatPreferences;
+import fr.eternom.eterChat.module.preference.PreferenceActions;
 import fr.eternom.eterLib.EterLib;
 import fr.eternom.eterLib.helper.message.Messages;
 import org.bukkit.Bukkit;
@@ -27,6 +29,8 @@ public final class Main extends JavaPlugin {
     private ChatService chat;
     private PrivateMessages privateMessages;
     private PlayerNames names;
+    private PreferenceActions actions;
+    private ChatGui gui;
 
     @Override
     public void onEnable() {
@@ -48,8 +52,10 @@ public final class Main extends JavaPlugin {
         chat = new ChatService(this, messages, new ChatFormatter(messages), ranks, preferences,
                 lib.getMessenger(), lib.getRedis(), lib.getServerName(), lib.getServerDisplayName());
         chat.start();
-        privateMessages = new PrivateMessages(this, chat, lib.getPlayers(), messages);
+        privateMessages = new PrivateMessages(this, chat, preferences, lib.getPlayers(), messages);
         names = new PlayerNames(chat.isNetworked() ? lib.getPlayers() : null);
+        actions = new PreferenceActions(this, preferences, lib.getPlayers(), messages);
+        gui = new ChatGui(this, preferences, actions, messages);
 
         new Commands(this);
         new Events(this);
@@ -79,5 +85,13 @@ public final class Main extends JavaPlugin {
 
     public PlayerNames getNames() {
         return names;
+    }
+
+    public PreferenceActions getActions() {
+        return actions;
+    }
+
+    public ChatGui getGui() {
+        return gui;
     }
 }

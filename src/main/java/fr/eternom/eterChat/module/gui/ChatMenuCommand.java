@@ -1,29 +1,26 @@
-package fr.eternom.eterChat.module.preference;
+package fr.eternom.eterChat.module.gui;
 
-import fr.eternom.eterChat.module.preference.ChatPreferences.Setting;
 import fr.eternom.eterLib.helper.message.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-/** /msgtoggle, /notifications, /socialspy : active ou coupe le réglage, gardé pour tous les serveurs. */
-public class ToggleCommand implements CommandExecutor {
+/** /chat : ouvre le menu des réglages du chat. */
+public class ChatMenuCommand implements CommandExecutor {
 
-    private final PreferenceActions actions;
+    private final ChatGui gui;
     private final Messages messages;
-    private final Setting setting;
 
-    public ToggleCommand(PreferenceActions actions, Messages messages, Setting setting) {
-        this.actions = actions;
+    public ChatMenuCommand(ChatGui gui, Messages messages) {
+        this.gui = gui;
         this.messages = messages;
-        this.setting = setting;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            actions.toggle(player, setting);
+            gui.open(player);
         } else {
             messages.send(sender, "command.players-only");
         }
