@@ -6,29 +6,25 @@ import fr.eternom.eterChat.module.chat.ChatFormatter;
 import fr.eternom.eterChat.module.chat.ChatService;
 import fr.eternom.eterChat.module.chat.Ranks;
 import fr.eternom.eterChat.module.gui.ChatGui;
-import fr.eternom.eterChat.module.message.PlayerNames;
 import fr.eternom.eterChat.module.message.PrivateMessages;
 import fr.eternom.eterChat.module.preference.ChatPreferences;
 import fr.eternom.eterChat.module.preference.PreferenceActions;
 import fr.eternom.eterLib.EterLib;
 import fr.eternom.eterLib.helper.message.Messages;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
 
-    /** Version minimale d'EterLib : RedisMessenger, listOnline et server-display-name arrivent en 1.4.0. */
-    private static final String REQUIRED_ETERLIB = "1.4.0";
+    /** Version minimale d'EterLib : RedisMessenger et server-display-name arrivent en 1.4.0, OnlineNames en 1.5.0. */
+    private static final String REQUIRED_ETERLIB = "1.5.0";
 
     /** Préfixe des tables d'EterChat dans la base commune : eterchat_players, eterchat_ignores. */
     private static final String TABLE_PREFIX = "eterchat_";
-    private static final long NAMES_REFRESH_TICKS = 10 * 20;
 
     private Messages messages;
     private ChatPreferences preferences;
     private ChatService chat;
     private PrivateMessages privateMessages;
-    private PlayerNames names;
     private PreferenceActions actions;
     private ChatGui gui;
 
@@ -53,16 +49,11 @@ public final class Main extends JavaPlugin {
                 lib.getMessenger(), lib.getRedis(), lib.getServerName(), lib.getServerDisplayName());
         chat.start();
         privateMessages = new PrivateMessages(this, chat, preferences, lib.getPlayers(), messages);
-        names = new PlayerNames(chat.isNetworked() ? lib.getPlayers() : null);
         actions = new PreferenceActions(this, preferences, lib.getPlayers(), messages);
         gui = new ChatGui(this, preferences, actions, messages);
 
         new Commands(this);
         new Events(this);
-
-        if (chat.isNetworked()) {
-            Bukkit.getScheduler().runTaskTimerAsynchronously(this, names::refresh, 20, NAMES_REFRESH_TICKS);
-        }
         getLogger().info("Chat " + (chat.isNetworked() ? "relié à tout le réseau (Redis)" : "limité à ce serveur (Redis désactivé)")
                 + (ranks.isAvailable() ? ", grades LuckPerms" : ", sans LuckPerms"));
     }
@@ -81,10 +72,6 @@ public final class Main extends JavaPlugin {
 
     public PrivateMessages getPrivateMessages() {
         return privateMessages;
-    }
-
-    public PlayerNames getNames() {
-        return names;
     }
 
     public PreferenceActions getActions() {

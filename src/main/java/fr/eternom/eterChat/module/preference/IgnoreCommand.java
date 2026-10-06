@@ -1,7 +1,7 @@
 package fr.eternom.eterChat.module.preference;
 
-import fr.eternom.eterChat.module.message.PlayerNames;
 import fr.eternom.eterLib.helper.message.Messages;
+import fr.eternom.eterLib.module.player.OnlineNames;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -17,10 +17,10 @@ public class IgnoreCommand implements TabExecutor {
 
     private final PreferenceActions actions;
     private final ChatPreferences preferences;
-    private final PlayerNames names;
+    private final OnlineNames names;
     private final Messages messages;
 
-    public IgnoreCommand(PreferenceActions actions, ChatPreferences preferences, PlayerNames names, Messages messages) {
+    public IgnoreCommand(PreferenceActions actions, ChatPreferences preferences, OnlineNames names, Messages messages) {
         this.actions = actions;
         this.preferences = preferences;
         this.names = names;
@@ -45,6 +45,6 @@ public class IgnoreCommand implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return args.length == 1 ? names.complete(args[0]) : List.of();
+        return args.length == 1 ? names.complete(args[0], true) : List.of();
     }
 }
