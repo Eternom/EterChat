@@ -1,0 +1,59 @@
+name: EterChat
+version: '${version}'
+
+main: fr.eternom.eterChat.Main
+api-version: '26.2'
+load: POSTWORLD
+authors: [ NadTum ]
+description: Chat du réseau (global, staff) et messages privés entre serveurs.
+depend: [EterLib]
+softdepend: [LuckPerms]
+
+commands:
+  msg:
+    description: Envoyer un message privé, à un joueur de n'importe quel serveur.
+    usage: /msg <joueur> <message>
+    aliases: [tell, w, m, whisper, pm]
+  reply:
+    description: Répondre au dernier message privé.
+    usage: /r <message>
+    aliases: [r]
+  ignore:
+    description: Ignorer un joueur (ou ne plus l'ignorer) ; seul, affiche la liste.
+    usage: /ignore [joueur]
+  notifications:
+    description: Couper ou remettre le son et l'alerte des mentions et messages privés.
+    usage: /notifications
+    aliases: [notifs]
+  socialspy:
+    description: Voir les messages privés de tout le réseau.
+    usage: /socialspy
+    aliases: [spy]
+    permission: eterchat.socialspy
+  staffchat:
+    description: Un message au staff ; seul, envoie tout le chat au staff (ou revient au global).
+    usage: /staffchat [message]
+    aliases: [sc]
+    permission: eterchat.staff
+
+permissions:
+  eterchat.color:
+    description: Couleurs et styles MiniMessage dans ses messages (<red>, <bold>, <gradient>...).
+    default: false
+  eterchat.item:
+    description: Montrer l'objet en main en écrivant [item].
+    default: true
+  eterchat.staff:
+    description: Lire et écrire dans le canal staff.
+    default: op
+  eterchat.socialspy:
+    description: Voir les messages privés de tout le réseau (/socialspy).
+    default: op
+  eterchat.admin:
+    description: Toutes les permissions d'EterChat.
+    default: op
+    children:
+      eterchat.color: true
+      eterchat.item: true
+      eterchat.staff: true
+      eterchat.socialspy: true

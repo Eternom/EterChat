@@ -1,0 +1,59 @@
+# Messages d'EterChat, format MiniMessage : https://docs.advntr.dev/minimessage/format
+# Balises de la palette (EterLib/config.yml > language.colors) : <primary> <accent> <info> <error> <success>
+#   <info> = texte courant gris clair, <accent> = mots importants en orange.
+# Les valeurs entre <> comme <player> sont remplies par le plugin. Pour afficher un "<", écrire \< entre 'guillemets simples'.
+# Une clé absente reprend le texte intégré au plugin : tu peux ne garder que les lignes que tu modifies.
+
+prefix: "<gradient:#FF7A00:#FFB347><bold>EterChat</bold></gradient> <dark_gray>» "
+
+command:
+  players-only: "<error>Commande réservée aux joueurs."
+
+# Formats du chat. Variables :
+#   <prefix> <suffix> : grade LuckPerms   <name> : pseudo (fiche au survol, clic pour lui écrire)
+#   <server> : serveur d'où vient le message   <message> : le texte   <target> : destinataire d'un message privé
+chat:
+  global: "<prefix><name><suffix> <dark_gray>»</dark_gray> <white><message>"
+  staff: "<primary><bold>Staff</bold></primary> <dark_gray>· <info><server></info> · <accent><name></accent> »</dark_gray> <white><message>"
+  # Fiche au survol du pseudo
+  hover:
+    - "<accent><name>"
+    - "<dark_gray>▸ <info>Serveur : <accent><server>"
+    - ""
+    - "<accent>Clic <dark_gray>· <info>lui écrire en privé"
+  # Une mention (@Pseudo) dans un message
+  mention: "<accent><mention></accent>"
+  # Barre d'action du joueur mentionné
+  mentioned: "<accent><player></accent> <info>t'a mentionné dans le chat"
+
+private:
+  sent: "<dark_gray>[<info>Moi</info> → <accent><target></accent>]</dark_gray> <white><message>"
+  received: "<dark_gray>[<accent><name></accent> → <info>Moi</info>]</dark_gray> <white><message>"
+  spy: "<dark_gray>[Espion] <info><name> → <target></info> »</dark_gray> <gray><message>"
+  usage: '<error>Utilisation : <accent>/msg \<joueur> \<message>'
+  reply-usage: '<error>Utilisation : <accent>/r \<message>'
+  offline: "<error><accent><player></accent> n'est pas connecté."
+  failed: "<error>Ton message n'a pas pu être transmis à <accent><player></accent> (liaison entre serveurs coupée). Réessaie dans un instant."
+  no-reply: "<error>Personne à qui répondre."
+  self: "<error>Tu ne peux pas t'écrire à toi-même."
+  error: "<error>Une erreur est survenue, réessaie plus tard."
+
+ignore:
+  list: "<info>Joueurs ignorés : <accent><players>"
+  empty: '<info>Tu n''ignores personne. <dark_gray>(</dark_gray><accent>/ignore \<joueur></accent><dark_gray>)'
+  added: "<info>Tu ignores maintenant <accent><player></accent> : tu ne verras plus ses messages."
+  removed: "<info>Tu n'ignores plus <accent><player></accent>."
+  self: "<error>Tu ne peux pas t'ignorer toi-même."
+  unknown: "<error>Joueur inconnu : <accent><player></accent>."
+
+notifications:
+  on: "<info>Son et alerte des mentions et messages privés <success>activés</success>."
+  off: "<info>Son et alerte des mentions et messages privés <error>coupés</error>."
+
+socialspy:
+  on: "<info>Espion des messages privés <success>activé</success>."
+  off: "<info>Espion des messages privés <error>désactivé</error>."
+
+staff:
+  on: "<info>Ton chat part maintenant au <accent>staff</accent>. <dark_gray>(</dark_gray><accent>/sc</accent> <info>pour revenir</info><dark_gray>)"
+  off: "<info>Ton chat repart dans le <accent>global</accent>."

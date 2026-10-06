@@ -1,0 +1,59 @@
+# EterChat messages, MiniMessage format: https://docs.advntr.dev/minimessage/format
+# Palette tags (EterLib/config.yml > language.colors): <primary> <accent> <info> <error> <success>
+#   <info> = normal light gray text, <accent> = important words in orange.
+# Values between <> such as <player> are filled in by the plugin. To show a literal "<", write \< inside 'single quotes'.
+# A missing key falls back to the plugin's built-in text: you only need to keep the lines you change.
+
+prefix: "<gradient:#FF7A00:#FFB347><bold>EterChat</bold></gradient> <dark_gray>» "
+
+command:
+  players-only: "<error>This command can only be used by players."
+
+# Chat formats. Variables:
+#   <prefix> <suffix>: LuckPerms rank   <name>: player name (card on hover, click to message them)
+#   <server>: server the message comes from   <message>: the text   <target>: recipient of a private message
+chat:
+  global: "<prefix><name><suffix> <dark_gray>»</dark_gray> <white><message>"
+  staff: "<primary><bold>Staff</bold></primary> <dark_gray>· <info><server></info> · <accent><name></accent> »</dark_gray> <white><message>"
+  # Card shown when hovering a player name
+  hover:
+    - "<accent><name>"
+    - "<dark_gray>▸ <info>Server: <accent><server>"
+    - ""
+    - "<accent>Click <dark_gray>· <info>send a private message"
+  # A mention (@Name) inside a message
+  mention: "<accent><mention></accent>"
+  # Action bar of the mentioned player
+  mentioned: "<accent><player></accent> <info>mentioned you in the chat"
+
+private:
+  sent: "<dark_gray>[<info>Me</info> → <accent><target></accent>]</dark_gray> <white><message>"
+  received: "<dark_gray>[<accent><name></accent> → <info>Me</info>]</dark_gray> <white><message>"
+  spy: "<dark_gray>[Spy] <info><name> → <target></info> »</dark_gray> <gray><message>"
+  usage: '<error>Usage: <accent>/msg \<player> \<message>'
+  reply-usage: '<error>Usage: <accent>/r \<message>'
+  offline: "<error><accent><player></accent> is not online."
+  failed: "<error>Your message could not be delivered to <accent><player></accent> (link between servers is down). Try again in a moment."
+  no-reply: "<error>Nobody to reply to."
+  self: "<error>You can't message yourself."
+  error: "<error>Something went wrong, please try again later."
+
+ignore:
+  list: "<info>Ignored players: <accent><players>"
+  empty: '<info>You are not ignoring anyone. <dark_gray>(</dark_gray><accent>/ignore \<player></accent><dark_gray>)'
+  added: "<info>You are now ignoring <accent><player></accent>: you won't see their messages anymore."
+  removed: "<info>You are no longer ignoring <accent><player></accent>."
+  self: "<error>You can't ignore yourself."
+  unknown: "<error>Unknown player: <accent><player></accent>."
+
+notifications:
+  on: "<info>Mention and private message sound and alert <success>enabled</success>."
+  off: "<info>Mention and private message sound and alert <error>muted</error>."
+
+socialspy:
+  on: "<info>Private message spy <success>enabled</success>."
+  off: "<info>Private message spy <error>disabled</error>."
+
+staff:
+  on: "<info>Your chat now goes to the <accent>staff</accent> channel. <dark_gray>(</dark_gray><accent>/sc</accent> <info>to switch back</info><dark_gray>)"
+  off: "<info>Your chat is back in <accent>global</accent>."
