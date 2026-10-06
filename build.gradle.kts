@@ -16,7 +16,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:26.2.build.129-stable")
 
     // Socle commun : base, Redis, langues, joueurs du réseau (plugin EterLib installé sur le serveur)
-    compileOnly("com.github.Eternom:EterLib:1.4.0")
+    compileOnly("com.github.Eternom:EterLib:1.4.1")
     // Grades dans le chat (facultatif)
     compileOnly("net.luckperms:api:5.5")
 }
