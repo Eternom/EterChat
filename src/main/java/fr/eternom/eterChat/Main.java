@@ -15,8 +15,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
 
-    /** Version minimale d'EterLib : RedisMessenger et server-display-name arrivent en 1.4.0, OnlineNames en 1.5.0. */
-    private static final String REQUIRED_ETERLIB = "1.5.0";
+    /** Version minimale d'EterLib : bouton Retour/Fermer des menus et durées lisibles depuis 1.5.1. */
+    private static final String REQUIRED_ETERLIB = "1.5.1";
 
     /** Préfixe des tables d'EterChat dans la base commune : eterchat_players, eterchat_ignores. */
     private static final String TABLE_PREFIX = "eterchat_";
