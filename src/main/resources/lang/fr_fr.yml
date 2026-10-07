@@ -4,9 +4,7 @@
 # Les valeurs entre <> comme <player> sont remplies par le plugin. Pour afficher un "<", écrire \< entre 'guillemets simples'.
 # Une clé absente reprend le texte intégré au plugin : tu peux ne garder que les lignes que tu modifies.
 # Le préfixe des messages (« Core ») est commun à tous les plugins : EterLib/config.yml > language.prefix.
-
-command:
-  players-only: "<error>Commande réservée aux joueurs."
+# Textes communs (« Annuler », « Joueur inconnu », « Commande réservée aux joueurs »...) : dans EterLib/lang/, pour tous les plugins.
 
 # Formats du chat. Variables :
 #   <prefix> <suffix> : grade LuckPerms   <name> : pseudo (fiche au survol, clic pour lui écrire)
@@ -67,7 +65,6 @@ staff:
 
 # Fenêtres de dialogue du menu /chat
 dialog:
-  cancel: "Annuler"
   ignore:
     title: "<primary>Ignorer un joueur"
     body: "Tu ne verras plus ses messages, ni dans le chat ni en privé. Il n'en sera pas averti."

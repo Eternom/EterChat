@@ -1,5 +1,6 @@
 package fr.eternom.eterChat.module.gui;
 
+import fr.eternom.eterLib.helper.gui.Frame;
 import fr.eternom.eterLib.helper.gui.Items;
 import fr.eternom.eterLib.helper.gui.Menu;
 import fr.eternom.eterLib.helper.gui.Sounds;
@@ -10,13 +11,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -41,7 +40,6 @@ class IgnoredMenu implements Menu {
     private static final int ADD = 50;
     private static final int NEXT = 53;
     private static final int EMPTY = 22;
-    private static final Set<Integer> ACCENT_FRAME = Set.of(0, 1, 7, 8, 9, 17, 36, 44, 46, 52);
     private static final List<Integer> SLOTS = innerSlots();
 
     private final ChatGui gui;
@@ -95,13 +93,7 @@ class IgnoredMenu implements Menu {
     private void render() {
         inventory.clear();
         ignoredAtSlot.clear();
-        ItemStack accent = Items.pane(Material.ORANGE_STAINED_GLASS_PANE);
-        ItemStack neutral = Items.pane(Material.GRAY_STAINED_GLASS_PANE);
-        for (int slot = 0; slot < inventory.getSize(); slot++) {
-            if (!SLOTS.contains(slot)) {
-                inventory.setItem(slot, ACCENT_FRAME.contains(slot) ? accent : neutral);
-            }
-        }
+        Frame.fill(inventory, Material.ORANGE_STAINED_GLASS_PANE, SLOTS);
 
         int start = page * SLOTS.size();
         for (int i = 0; i < SLOTS.size() && start + i < ignored.size(); i++) {

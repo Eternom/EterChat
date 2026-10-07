@@ -15,8 +15,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
 
-    /** Version minimale d'EterLib : bouton Retour/Fermer des menus et durées lisibles depuis 1.5.1. */
-    private static final String REQUIRED_ETERLIB = "1.5.1";
+    /** Version minimale d'EterLib : textes communs et outils partagés (Frame, Money, NetworkBus) depuis 1.6.0. */
+    private static final String REQUIRED_ETERLIB = "1.6.0";
 
     /** Préfixe des tables d'EterChat dans la base commune : eterchat_players, eterchat_ignores. */
     private static final String TABLE_PREFIX = "eterchat_";
@@ -47,7 +47,7 @@ public final class Main extends JavaPlugin {
 
         Ranks ranks = Ranks.load();
         chat = new ChatService(this, messages, new ChatFormatter(messages), ranks, preferences,
-                lib.getMessenger(), lib.getRedis(), lib.getServerName(), lib.getServerDisplayName());
+                lib.network(this, "eterchat", messages), lib.getRedis(), lib.getServerName(), lib.getServerDisplayName());
         chat.start();
         privateMessages = new PrivateMessages(this, chat, preferences, lib.getPlayers(), messages);
         actions = new PreferenceActions(this, preferences, lib.getPlayers(), messages);

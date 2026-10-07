@@ -6,7 +6,7 @@ un plugin à part. Document développeur, à tenir à jour avec le code.
 
 ## Prérequis
 
-- **EterLib 1.5.0+** (`depend`). `server-display-name` d'EterLib est le nom de serveur montré dans le chat ; la complétion des pseudos avec Tab vient d'EterLib (`OnlineNames`).
+- **EterLib 1.6.0+** (`depend`, textes communs, cadre des menus, bus réseau, `Money`). `server-display-name` d'EterLib est le nom de serveur montré dans le chat ; la complétion des pseudos avec Tab vient d'EterLib (`OnlineNames`).
 - **Redis facultatif** : avec lui, le chat et les messages privés traversent les serveurs ; sans lui, chaque serveur a
   son propre chat et les messages privés ne vont qu'aux joueurs du même serveur.
 - **LuckPerms facultatif** : préfixe et suffixe du grade (codes `&` ou MiniMessage).
@@ -20,7 +20,7 @@ qui l'annule avant garde le dernier mot) et passe le texte à `ChatService` :
    interprété en MiniMessage qu'avec `eterchat.color`, et seulement les couleurs et les styles (pas de clic ni de survol).
    `[item]` devient l'objet en main avec son infobulle, `@Pseudo` est surligné.
 2. **Distribution sur ce serveur d'abord**, puis publication en JSON (`ChatMessage`) sur le canal Redis `eterchat`
-   (`RedisMessenger` d'EterLib). Les autres serveurs le distribuent à leurs joueurs ; l'origine ignore le sien en retour.
+   (bus réseau d'EterLib, type `chat`). Les autres serveurs le distribuent à leurs joueurs ; l'origine ignore le sien.
    **Redis en panne = le chat continue sur chaque serveur** : un avertissement par minute au plus dans la console,
    et l'expéditeur d'un message privé vers un autre serveur est prévenu qu'il n'est pas arrivé.
 3. **Côté destinataire**, la ligne est composée dans **sa** langue (`lang/` > `chat.global`, `chat.staff`, `private.*`).

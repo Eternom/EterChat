@@ -4,7 +4,7 @@ import fr.eternom.eterChat.module.chat.ChatMessage.Type;
 import fr.eternom.eterChat.module.chat.Ranks.Rank;
 import fr.eternom.eterChat.module.preference.ChatPreferences;
 import fr.eternom.eterLib.helper.cache.RedisCache;
-import fr.eternom.eterLib.helper.cache.RedisMessenger;
+import fr.eternom.eterLib.helper.cache.NetworkBus;
 import fr.eternom.eterLib.helper.message.Messages;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -23,15 +23,15 @@ import java.util.logging.Level;
 /**
  * Envoi et réception des messages du chat (global, staff, privés) sur tout le réseau.
  *
- * Chaque message est d'abord distribué sur ce serveur, puis publié sur Redis pour les autres (qui ignorent le leur en
- * retour). Si Redis est désactivé ou en panne, le chat continue donc de fonctionner sur chaque serveur.
+ * Chaque message est d'abord distribué sur ce serveur, puis envoyé aux autres par le bus réseau d'EterLib (canal
+ * "eterchat", type "chat" ; le serveur d'origine ignore le sien). Si Redis est désactivé ou en panne, le chat continue donc de fonctionner sur chaque serveur.
  */
 public class ChatService {
 
     public static final String STAFF_PERMISSION = "eterchat.staff";
     public static final String SPY_PERMISSION = "eterchat.socialspy";
 
-    private static final String CHANNEL = "eterchat";
+    private static final String CHAT = "chat";
     private static final Duration REPLY_TTL = Duration.ofHours(1);
     private static final long WARNING_INTERVAL_MILLIS = 60_000;
 
@@ -40,7 +40,7 @@ public class ChatService {
     private final ChatFormatter formatter;
     private final Ranks ranks;
     private final ChatPreferences preferences;
-    private final RedisMessenger messenger; // null sans Redis
+    private final NetworkBus bus;
     private final RedisCache redis;         // null sans Redis
     private final String serverName;
     private final String serverDisplayName;
@@ -50,27 +50,25 @@ public class ChatService {
     private volatile long lastWarning;
 
     public ChatService(JavaPlugin plugin, Messages messages, ChatFormatter formatter, Ranks ranks, ChatPreferences preferences,
-                       RedisMessenger messenger, RedisCache redis, String serverName, String serverDisplayName) {
+                       NetworkBus bus, RedisCache redis, String serverName, String serverDisplayName) {
         this.plugin = plugin;
         this.messages = messages;
         this.formatter = formatter;
         this.ranks = ranks;
         this.preferences = preferences;
-        this.messenger = messenger;
+        this.bus = bus;
         this.redis = redis;
         this.serverName = serverName;
         this.serverDisplayName = serverDisplayName;
     }
 
     public void start() {
-        if (messenger != null) {
-            messenger.subscribe(CHANNEL, this::receive);
-        }
+        bus.on(CHAT, data -> deliver(ChatMessage.fromJson(data)));
     }
 
     /** true si les messages traversent les serveurs (Redis actif). */
     public boolean isNetworked() {
-        return messenger != null;
+        return bus.isNetworked();
     }
 
     /** Thread principal : message de chat d'un joueur, vers le global ou le staff. */
@@ -94,12 +92,8 @@ public class ChatService {
     /** Idem ; onFailure est lancé sur le thread principal si Redis n'a pas pu transmettre le message. */
     public void send(ChatMessage message, Runnable onFailure) {
         deliver(message);
-        if (messenger != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                if (!publish(message)) {
-                    Bukkit.getScheduler().runTask(plugin, onFailure);
-                }
-            });
+        if (bus.isNetworked()) {
+            bus.publish(CHAT, message.toJson(), onFailure);
         }
     }
 
@@ -132,25 +126,6 @@ public class ChatService {
 
     public void forget(UUID player) {
         replies.remove(player);
-    }
-
-    /** Fil d'écoute Redis : message d'un autre serveur. */
-    private void receive(String json) {
-        ChatMessage message = ChatMessage.fromJson(json);
-        if (message.origin().equals(serverName) || !plugin.isEnabled()) {
-            return;
-        }
-        Bukkit.getScheduler().runTask(plugin, () -> deliver(message));
-    }
-
-    private boolean publish(ChatMessage message) {
-        try {
-            messenger.publish(CHANNEL, message.toJson());
-            return true;
-        } catch (RuntimeException e) {
-            warn("Redis injoignable : le message n'a été vu que sur ce serveur", e);
-            return false;
-        }
     }
 
     /** Thread principal : affiche le message aux destinataires présents sur ce serveur. */

@@ -3,6 +3,7 @@ package fr.eternom.eterChat.module.gui;
 import fr.eternom.eterChat.module.chat.ChatService;
 import fr.eternom.eterChat.module.preference.ChatPreferences.Setting;
 import fr.eternom.eterChat.module.preference.ChatPreferences.Settings;
+import fr.eternom.eterLib.helper.gui.Frame;
 import fr.eternom.eterLib.helper.gui.Items;
 import fr.eternom.eterLib.helper.gui.Menu;
 import fr.eternom.eterLib.helper.gui.Sounds;
@@ -16,7 +17,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Menu /chat, 5 lignes :
@@ -38,7 +38,6 @@ class ChatMenu implements Menu {
     private static final int STAFF_CHANNEL = 30;
     private static final int SOCIAL_SPY = 32;
     private static final int BACK = 40;
-    private static final Set<Integer> ACCENT_FRAME = Set.of(0, 1, 7, 8, 9, 17, 27, 35, 36, 37, 43, 44);
 
     private final ChatGui gui;
     private final Messages messages;
@@ -81,15 +80,7 @@ class ChatMenu implements Menu {
 
     private void render() {
         inventory.clear();
-        ItemStack accent = Items.pane(Material.ORANGE_STAINED_GLASS_PANE);
-        ItemStack neutral = Items.pane(Material.GRAY_STAINED_GLASS_PANE);
-        for (int slot = 0; slot < inventory.getSize(); slot++) {
-            int row = slot / 9;
-            int column = slot % 9;
-            if (row == 0 || row == 4 || column == 0 || column == 8) {
-                inventory.setItem(slot, ACCENT_FRAME.contains(slot) ? accent : neutral);
-            }
-        }
+        Frame.draw(inventory, Material.ORANGE_STAINED_GLASS_PANE);
 
         Settings settings = gui.preferences().get(viewer.getUniqueId());
         int ignored = gui.preferences().ignored(viewer.getUniqueId()).size();

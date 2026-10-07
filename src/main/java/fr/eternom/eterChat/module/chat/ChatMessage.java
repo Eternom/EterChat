@@ -1,7 +1,6 @@
 package fr.eternom.eterChat.module.chat;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
@@ -24,7 +23,7 @@ public record ChatMessage(Type type, String origin, String server, UUID sender, 
 
     private static final GsonComponentSerializer GSON = GsonComponentSerializer.gson();
 
-    public String toJson() {
+    public JsonObject toJson() {
         JsonObject json = new JsonObject();
         json.addProperty("type", type.name());
         json.addProperty("origin", origin);
@@ -38,11 +37,10 @@ public record ChatMessage(Type type, String origin, String server, UUID sender, 
             json.addProperty("target", target.toString());
             json.addProperty("target_name", targetName);
         }
-        return json.toString();
+        return json;
     }
 
-    public static ChatMessage fromJson(String text) {
-        JsonObject json = JsonParser.parseString(text).getAsJsonObject();
+    public static ChatMessage fromJson(JsonObject json) {
         boolean hasTarget = json.has("target");
         return new ChatMessage(
                 Type.valueOf(json.get("type").getAsString()),
