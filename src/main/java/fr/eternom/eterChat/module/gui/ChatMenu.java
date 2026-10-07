@@ -25,7 +25,7 @@ import java.util.Set;
  *  ▣ · · · · · · · ▣
  *  ▢ · ✉ · ♪ · ☠ · ▢     ✉ = messages privés, ♪ = notifications, ☠ = joueurs ignorés
  *  ▣ · · ★ · ◎ · · ▣     ★ = canal staff, ◎ = espion (selon les permissions)
- *  ▣ ▣ ▢ ▢ ▢ ▢ ▢ ▣ ▣
+ *  ▣ ▣ ▢ ▢ « ▢ ▢ ▣ ▣     « = retour (commande de la config) ou fermer
  * </pre>
  * Un clic sur un réglage l'active ou le coupe ; l'icône brille quand il est activé.
  */
@@ -37,6 +37,7 @@ class ChatMenu implements Menu {
     private static final int IGNORED = 24;
     private static final int STAFF_CHANNEL = 30;
     private static final int SOCIAL_SPY = 32;
+    private static final int BACK = 40;
     private static final Set<Integer> ACCENT_FRAME = Set.of(0, 1, 7, 8, 9, 17, 27, 35, 36, 37, 43, 44);
 
     private final ChatGui gui;
@@ -65,6 +66,8 @@ class ChatMenu implements Menu {
             Sounds.click(player);
             gui.toggle(player, setting);
             render();
+        } else if (slot == BACK) {
+            gui.backButton().click(player);
         } else if (slot == IGNORED) {
             Sounds.page(player);
             gui.openIgnored(player);
@@ -109,6 +112,7 @@ class ChatMenu implements Menu {
         if (viewer.hasPermission(ChatService.SPY_PERMISSION)) {
             inventory.setItem(SOCIAL_SPY, toggleItem(Material.SPYGLASS, "socialspy", settings.socialSpy()));
         }
+        inventory.setItem(BACK, gui.backButton().item(viewer));
     }
 
     /** Réglage activable : nom, description, état actuel ; brillant quand il est activé. */

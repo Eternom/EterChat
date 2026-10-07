@@ -3,6 +3,7 @@ package fr.eternom.eterChat.module.gui;
 import fr.eternom.eterChat.module.preference.ChatPreferences;
 import fr.eternom.eterChat.module.preference.ChatPreferences.Setting;
 import fr.eternom.eterChat.module.preference.PreferenceActions;
+import fr.eternom.eterLib.helper.gui.BackButton;
 import fr.eternom.eterLib.helper.message.Messages;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,12 +17,15 @@ public class ChatGui {
     private final PreferenceActions actions;
     private final ChatDialogs dialogs;
     private final Messages messages;
+    private final BackButton backButton;
 
-    public ChatGui(JavaPlugin plugin, ChatPreferences preferences, PreferenceActions actions, Messages messages) {
+    public ChatGui(JavaPlugin plugin, ChatPreferences preferences, PreferenceActions actions, Messages messages,
+                   BackButton backButton) {
         this.preferences = preferences;
         this.actions = actions;
         this.dialogs = new ChatDialogs(plugin, messages);
         this.messages = messages;
+        this.backButton = backButton;
     }
 
     public void open(Player player) {
@@ -54,5 +58,9 @@ public class ChatGui {
 
     Messages messages() {
         return messages;
+    }
+
+    BackButton backButton() {
+        return backButton;
     }
 }

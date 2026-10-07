@@ -1,0 +1,13 @@
+# ============================================================
+#  EterChat
+# ============================================================
+#
+#  Les formats du chat et tous les textes sont dans lang/. Base de données,
+#  Redis et nom du serveur : EterLib/config.yml.
+#  Toute modification nécessite un redémarrage du serveur.
+
+# Menus : bouton en bas du menu. Avec une commande (sans le /), il la lance pour le joueur et relie
+# les menus entre eux (ex : "profile" pour revenir au menu du profil) ; vide, il ferme le menu.
+menus:
+  chat:
+    back-command: ""

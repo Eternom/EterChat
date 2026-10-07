@@ -30,6 +30,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
         // En premier : vérifie la version d'EterLib (un EterLib < 1.3.0 n'a pas requireVersion, d'où le catch)
         try {
             if (!EterLib.requireVersion(this, REQUIRED_ETERLIB)) {
@@ -50,7 +51,7 @@ public final class Main extends JavaPlugin {
         chat.start();
         privateMessages = new PrivateMessages(this, chat, preferences, lib.getPlayers(), messages);
         actions = new PreferenceActions(this, preferences, lib.getPlayers(), messages);
-        gui = new ChatGui(this, preferences, actions, messages);
+        gui = new ChatGui(this, preferences, actions, messages, lib.backButton(getConfig().getString("menus.chat.back-command", "")));
 
         new Commands(this);
         new Events(this);
