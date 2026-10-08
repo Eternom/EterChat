@@ -8,7 +8,8 @@ un plugin à part. Document développeur, à tenir à jour avec le code.
 
 - **EterLib 1.8.0+** (`depend`, textes communs, cadre des menus, bus réseau, `Money`). `server-display-name` d'EterLib est le nom de serveur montré dans le chat ; la complétion des pseudos avec Tab vient d'EterLib (`OnlineNames`).
 - **Redis** (obligatoire, via EterLib) : le chat et les messages privés traversent les serveurs.
-- **LuckPerms facultatif** : préfixe et suffixe du grade (codes `&` ou MiniMessage).
+- **LuckPerms facultatif** : préfixe et suffixe du grade (codes `&` ou MiniMessage). Un **badge** (étiquette EterLib
+  `badge`, posée par EterClan : le tag du clan) remplace le préfixe du grade.
 
 ## Fonctionnement
 
