@@ -41,7 +41,7 @@ public class ChatService {
     private final Ranks ranks;
     private final ChatPreferences preferences;
     private final NetworkBus bus;
-    private final RedisCache redis;         // null sans Redis
+    private final RedisCache redis;
     private final String serverName;
     private final String serverDisplayName;
 
@@ -66,11 +66,6 @@ public class ChatService {
         bus.on(CHAT, data -> deliver(ChatMessage.fromJson(data)));
     }
 
-    /** true si les messages traversent les serveurs (Redis actif). */
-    public boolean isNetworked() {
-        return bus.isNetworked();
-    }
-
     /** Thread principal : message de chat d'un joueur, vers le global ou le staff. */
     public void chat(Player player, String text, boolean staff) {
         send(create(player, staff ? Type.STAFF : Type.GLOBAL, text, null, null));
@@ -92,9 +87,7 @@ public class ChatService {
     /** Idem ; onFailure est lancé sur le thread principal si Redis n'a pas pu transmettre le message. */
     public void send(ChatMessage message, Runnable onFailure) {
         deliver(message);
-        if (bus.isNetworked()) {
-            bus.publish(CHAT, message.toJson(), onFailure);
-        }
+        bus.publish(CHAT, message.toJson(), onFailure);
     }
 
     public Component line(CommandSender receiver, String key, ChatMessage message) {
@@ -104,21 +97,19 @@ public class ChatService {
     /** Thread principal : retient le correspondant de player pour /r. */
     public void rememberReply(UUID player, String name) {
         replies.put(player, name);
-        if (redis != null) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                try {
-                    redis.set(replyKey(player), name, REPLY_TTL);
-                } catch (RuntimeException e) {
-                    warn("Correspondant de /r non enregistré dans Redis", e);
-                }
-            });
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                redis.set(replyKey(player), name, REPLY_TTL);
+            } catch (RuntimeException e) {
+                warn("Correspondant de /r non enregistré dans Redis", e);
+            }
+        });
     }
 
     /** Bloquant (Redis) : dernier correspondant, même s'il date d'un autre serveur. */
     public Optional<String> findReply(UUID player) {
         String local = replies.get(player);
-        if (local != null || redis == null) {
+        if (local != null) {
             return Optional.ofNullable(local);
         }
         return redis.get(replyKey(player));

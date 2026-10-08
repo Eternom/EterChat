@@ -16,16 +16,13 @@ public class MessageCommand implements TabExecutor {
     private final PrivateMessages privateMessages;
     private final OnlineNames names;
     private final Messages messages;
-    private final boolean networked;
     private final boolean reply;
 
-    /** @param networked false sans Redis : seuls les joueurs de ce serveur sont proposés
-     *  @param reply true pour /r (pas de pseudo : le dernier correspondant) */
-    public MessageCommand(PrivateMessages privateMessages, OnlineNames names, Messages messages, boolean networked, boolean reply) {
+    /** @param reply true pour /r (pas de pseudo : le dernier correspondant) */
+    public MessageCommand(PrivateMessages privateMessages, OnlineNames names, Messages messages, boolean reply) {
         this.privateMessages = privateMessages;
         this.names = names;
         this.messages = messages;
-        this.networked = networked;
         this.reply = reply;
     }
 
@@ -53,6 +50,6 @@ public class MessageCommand implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return !reply && args.length == 1 ? names.complete(args[0], networked) : List.of();
+        return !reply && args.length == 1 ? names.complete(args[0]) : List.of();
     }
 }

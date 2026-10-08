@@ -20,9 +20,8 @@ public class Commands {
 
     public Commands(Main main) {
         OnlineNames names = EterLib.get().getOnlineNames();
-        boolean networked = main.getChat().isNetworked();
-        register(main, "msg", new MessageCommand(main.getPrivateMessages(), names, main.getMessages(), networked, false));
-        register(main, "reply", new MessageCommand(main.getPrivateMessages(), names, main.getMessages(), networked, true));
+        register(main, "msg", new MessageCommand(main.getPrivateMessages(), names, main.getMessages(), false));
+        register(main, "reply", new MessageCommand(main.getPrivateMessages(), names, main.getMessages(), true));
         register(main, "ignore", new IgnoreCommand(main.getActions(), main.getPreferences(), names, main.getMessages()));
         register(main, "msgtoggle", new ToggleCommand(main.getActions(), main.getMessages(), Setting.PRIVATE_MESSAGES));
         register(main, "notifications", new ToggleCommand(main.getActions(), main.getMessages(), Setting.NOTIFICATIONS));

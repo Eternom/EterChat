@@ -6,9 +6,8 @@ un plugin à part. Document développeur, à tenir à jour avec le code.
 
 ## Prérequis
 
-- **EterLib 1.6.0+** (`depend`, textes communs, cadre des menus, bus réseau, `Money`). `server-display-name` d'EterLib est le nom de serveur montré dans le chat ; la complétion des pseudos avec Tab vient d'EterLib (`OnlineNames`).
-- **Redis facultatif** : avec lui, le chat et les messages privés traversent les serveurs ; sans lui, chaque serveur a
-  son propre chat et les messages privés ne vont qu'aux joueurs du même serveur.
+- **EterLib 1.8.0+** (`depend`, textes communs, cadre des menus, bus réseau, `Money`). `server-display-name` d'EterLib est le nom de serveur montré dans le chat ; la complétion des pseudos avec Tab vient d'EterLib (`OnlineNames`).
+- **Redis** (obligatoire, via EterLib) : le chat et les messages privés traversent les serveurs.
 - **LuckPerms facultatif** : préfixe et suffixe du grade (codes `&` ou MiniMessage).
 
 ## Fonctionnement

@@ -51,10 +51,6 @@ public class PrivateMessages {
             deliver(sender, new Recipient(uuid, local.getName(), bypass || preferences.get(uuid).privateMessages()), text);
             return;
         }
-        if (!chat.isNetworked()) {
-            messages.send(sender, "private.offline", "player", targetName);
-            return;
-        }
         // Destinataire sur un autre serveur : ses réglages sont lus en base
         Tasks.async(plugin, sender, () -> directory.find(targetName).filter(NetworkPlayer::isOnline)
                         .map(target -> new Recipient(target.uuid(), target.name(),
