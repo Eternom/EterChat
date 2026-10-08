@@ -11,6 +11,8 @@
 #   <server>: server the message comes from   <message>: the text   <target>: recipient of a private message
 chat:
   global: "<prefix><name><suffix> <dark_gray>»</dark_gray> <white><message>"
+  # Prison chat message, seen by staff elsewhere (eterchat.prisonchat.see)
+  global-prison: "<error><bold>Prison</bold></error> <dark_gray>·</dark_gray> <prefix><name><suffix> <dark_gray>»</dark_gray> <white><message>"
   staff: "<primary><bold>Staff</bold></primary> <dark_gray>· <info><server></info> · <accent><name></accent> »</dark_gray> <white><message>"
   # Card shown when hovering a player name
   hover:
@@ -32,6 +34,7 @@ private:
   offline: "<error><accent><player></accent> is not online."
   failed: "<error>Your message could not be delivered to <accent><player></accent> (link between servers is down). Try again in a moment."
   disabled: "<error><accent><player></accent> doesn't accept private messages."
+  prison-blocked: "<error>Private messages don't go between the prison and the rest of the network (<accent><player></accent>)."
   own-disabled: "<info>Your private messages are blocked: <accent><player></accent> won't be able to reply. <dark_gray>(</dark_gray><accent>/msgtoggle</accent><dark_gray>)"
   no-reply: "<error>Nobody to reply to."
   self: "<error>You can't message yourself."

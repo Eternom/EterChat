@@ -11,6 +11,8 @@
 #   <server> : serveur d'où vient le message   <message> : le texte   <target> : destinataire d'un message privé
 chat:
   global: "<prefix><name><suffix> <dark_gray>»</dark_gray> <white><message>"
+  # Message du chat de la prison, vu par le staff ailleurs (eterchat.prisonchat.see)
+  global-prison: "<error><bold>Prison</bold></error> <dark_gray>·</dark_gray> <prefix><name><suffix> <dark_gray>»</dark_gray> <white><message>"
   staff: "<primary><bold>Staff</bold></primary> <dark_gray>· <info><server></info> · <accent><name></accent> »</dark_gray> <white><message>"
   # Fiche au survol du pseudo
   hover:
@@ -32,6 +34,7 @@ private:
   offline: "<error><accent><player></accent> n'est pas connecté."
   failed: "<error>Ton message n'a pas pu être transmis à <accent><player></accent> (liaison entre serveurs coupée). Réessaie dans un instant."
   disabled: "<error><accent><player></accent> n'accepte pas les messages privés."
+  prison-blocked: "<error>Les messages privés ne passent pas entre la prison et le reste du réseau (<accent><player></accent>)."
   own-disabled: "<info>Tes messages privés sont coupés : <accent><player></accent> ne pourra pas te répondre. <dark_gray>(</dark_gray><accent>/msgtoggle</accent><dark_gray>)"
   no-reply: "<error>Personne à qui répondre."
   self: "<error>Tu ne peux pas t'écrire à toi-même."

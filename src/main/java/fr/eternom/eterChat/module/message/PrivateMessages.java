@@ -23,8 +23,8 @@ public class PrivateMessages {
 
     public static final String BYPASS_PERMISSION = "eterchat.bypass.msgtoggle";
 
-    /** Destinataire trouvé, et s'il accepte le message. */
-    private record Recipient(UUID uuid, String name, boolean accepts) {
+    /** Destinataire trouvé, s'il accepte le message, et le serveur où il est. */
+    private record Recipient(UUID uuid, String name, boolean accepts, String server) {
     }
 
     private final JavaPlugin plugin;
@@ -44,19 +44,28 @@ public class PrivateMessages {
 
     /** Thread principal. */
     public void send(Player sender, String targetName, String text) {
+        send(sender, targetName, text, false);
+    }
+
+    /**
+     * reply : une réponse (/r) passe même entre la prison et le reste du réseau, pour répondre au staff qui a écrit ;
+     * sinon un prisonnier n'écrit qu'aux prisonniers, et seul le staff écrit en prison.
+     */
+    private void send(Player sender, String targetName, String text, boolean reply) {
         boolean bypass = sender.hasPermission(BYPASS_PERMISSION);
         Player local = Bukkit.getPlayerExact(targetName);
         if (local != null) {
             UUID uuid = local.getUniqueId();
-            deliver(sender, new Recipient(uuid, local.getName(), bypass || preferences.get(uuid).privateMessages()), text);
+            deliver(sender, new Recipient(uuid, local.getName(), bypass || preferences.get(uuid).privateMessages(),
+                    chat.serverName()), text, reply);
             return;
         }
         // Destinataire sur un autre serveur : ses réglages sont lus en base
         Tasks.async(plugin, sender, () -> directory.find(targetName).filter(NetworkPlayer::isOnline)
                         .map(target -> new Recipient(target.uuid(), target.name(),
-                                bypass || preferences.read(target.uuid()).privateMessages())),
+                                bypass || preferences.read(target.uuid()).privateMessages(), target.server())),
                 found -> found.ifPresentOrElse(
-                        recipient -> deliver(sender, recipient, text),
+                        recipient -> deliver(sender, recipient, text, reply),
                         () -> messages.send(sender, "private.offline", "player", targetName)),
                 () -> messages.send(sender, "private.error"));
     }
@@ -66,14 +75,19 @@ public class PrivateMessages {
         UUID uuid = sender.getUniqueId();
         Tasks.async(plugin, sender, () -> chat.findReply(uuid),
                 (Optional<String> name) -> name.ifPresentOrElse(
-                        target -> send(sender, target, text),
+                        target -> send(sender, target, text, true),
                         () -> messages.send(sender, "private.no-reply")),
                 () -> messages.send(sender, "private.error"));
     }
 
-    private void deliver(Player sender, Recipient recipient, String text) {
+    private void deliver(Player sender, Recipient recipient, String text, boolean reply) {
         if (recipient.uuid().equals(sender.getUniqueId())) {
             messages.send(sender, "private.self");
+            return;
+        }
+        boolean crossesPrison = chat.isPrison(chat.serverName()) != chat.isPrison(recipient.server());
+        if (crossesPrison && !reply && !sender.hasPermission(ChatService.PRISON_PERMISSION)) {
+            messages.send(sender, "private.prison-blocked", "player", recipient.name());
             return;
         }
         if (!recipient.accepts()) {

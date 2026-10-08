@@ -6,6 +6,12 @@
 #  Redis et nom du serveur : EterLib/config.yml.
 #  Toute modification nécessite un redémarrage du serveur.
 
+# Prison : les serveurs dont le nom commence par ce préfixe ont leur propre chat (séparé du chat global),
+# et un prisonnier n'écrit en privé qu'aux prisonniers (sauf pour répondre au staff). Le staff
+# (eterchat.prisonchat.see) voit les deux chats et écrit partout. Vide = pas de séparation.
+prison:
+  server-prefix: prison
+
 # Menus : bouton en bas du menu. Avec une commande (sans le /), il la lance pour le joueur et relie
 # les menus entre eux (ex : "profile" pour revenir au menu du profil) ; vide, il ferme le menu.
 menus:

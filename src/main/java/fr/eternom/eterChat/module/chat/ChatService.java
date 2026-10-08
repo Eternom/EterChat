@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Duration;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,6 +37,8 @@ public class ChatService {
     private static final String CHAT = "chat";
     /** Étiquette EterLib qui remplace le grade (posée par EterClan : le tag du clan). */
     private static final String BADGE = "badge";
+    /** Voir et écrire au chat de la prison depuis ailleurs (et inversement) : le staff. */
+    public static final String PRISON_PERMISSION = "eterchat.prisonchat.see";
     private static final Duration REPLY_TTL = Duration.ofHours(1);
     private static final long WARNING_INTERVAL_MILLIS = 60_000;
 
@@ -47,6 +50,8 @@ public class ChatService {
     private final NetworkBus bus;
     private final RedisCache redis;
     private final String serverName;
+    /** Début du nom des serveurs prison (config prison.server-prefix) : leur chat est séparé du chat global. */
+    private final String prisonPrefix;
     private final String serverDisplayName;
 
     /** Dernier correspondant de chaque joueur connecté ici, pour /r ; recopié dans Redis pour suivre le joueur. */
@@ -63,6 +68,7 @@ public class ChatService {
         this.bus = bus;
         this.redis = redis;
         this.serverName = serverName;
+        this.prisonPrefix = plugin.getConfig().getString("prison.server-prefix", "prison").toLowerCase(Locale.ROOT);
         this.serverDisplayName = serverDisplayName;
     }
 
@@ -95,6 +101,15 @@ public class ChatService {
     public void send(ChatMessage message, Runnable onFailure) {
         deliver(message);
         bus.publish(CHAT, message.toJson(), onFailure);
+    }
+
+    /** Un serveur prison (son nom commence par prison.server-prefix). */
+    public boolean isPrison(String server) {
+        return server != null && !prisonPrefix.isEmpty() && server.toLowerCase(Locale.ROOT).startsWith(prisonPrefix);
+    }
+
+    public String serverName() {
+        return serverName;
     }
 
     public Component line(CommandSender receiver, String key, ChatMessage message) {
@@ -135,14 +150,24 @@ public class ChatService {
         }
     }
 
+    /**
+     * Chat global : la prison a son propre chat. Un message de la prison ne va qu'aux serveurs prison, un message
+     * d'ailleurs ne va pas en prison ; le staff (PRISON_PERMISSION) voit les deux, la prison avec son étiquette.
+     */
     private void deliverGlobal(ChatMessage message) {
+        boolean fromPrison = isPrison(message.origin());
+        boolean herePrison = isPrison(serverName);
         for (Player player : Bukkit.getOnlinePlayers()) {
             UUID uuid = player.getUniqueId();
             boolean self = uuid.equals(message.sender());
             if (!self && preferences.isIgnoring(uuid, message.sender())) {
                 continue;
             }
-            player.sendMessage(line(player, "chat.global", message));
+            boolean sameGroup = fromPrison == herePrison;
+            if (!sameGroup && !player.hasPermission(PRISON_PERMISSION)) {
+                continue;
+            }
+            player.sendMessage(line(player, fromPrison && !herePrison ? "chat.global-prison" : "chat.global", message));
             if (!self && ChatFormatter.mentions(message, player.getName()) && preferences.get(uuid).notifications()) {
                 player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.6f, 1.4f);
                 messages.actionBar(player, "chat.mentioned", "player", message.senderName());

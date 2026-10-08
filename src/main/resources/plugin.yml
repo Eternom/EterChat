@@ -53,6 +53,9 @@ permissions:
   eterchat.staff:
     description: Lire et écrire dans le canal staff.
     default: op
+  eterchat.prisonchat.see:
+    description: 'Staff : voir le chat de la prison depuis ailleurs (et inversement), écrire en privé aux prisonniers.'
+    default: op
   eterchat.socialspy:
     description: Voir les messages privés de tout le réseau (/socialspy).
     default: op
