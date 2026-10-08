@@ -3,10 +3,12 @@ package fr.eternom.eterChat.module.message;
 import fr.eternom.eterChat.module.chat.ChatMessage;
 import fr.eternom.eterChat.module.chat.ChatService;
 import fr.eternom.eterChat.module.preference.ChatPreferences;
+import fr.eternom.eterLib.EterLib;
 import fr.eternom.eterLib.helper.message.Messages;
 import fr.eternom.eterLib.helper.task.Tasks;
 import fr.eternom.eterLib.module.player.PlayerDirectory;
 import fr.eternom.eterLib.module.player.PlayerDirectory.NetworkPlayer;
+import fr.eternom.eterLib.module.vanish.Vanish;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -53,8 +55,10 @@ public class PrivateMessages {
      */
     private void send(Player sender, String targetName, String text, boolean reply) {
         boolean bypass = sender.hasPermission(BYPASS_PERMISSION);
+        // Un invisible (vanish du staff) est hors ligne pour qui ne le voit pas, sauf pour lui répondre
+        Vanish vanish = EterLib.get().getVanish();
         Player local = Bukkit.getPlayerExact(targetName);
-        if (local != null) {
+        if (local != null && (reply || vanish.canSee(sender, local.getUniqueId()))) {
             UUID uuid = local.getUniqueId();
             deliver(sender, new Recipient(uuid, local.getName(), bypass || preferences.get(uuid).privateMessages(),
                     chat.serverName()), text, reply);
@@ -62,6 +66,7 @@ public class PrivateMessages {
         }
         // Destinataire sur un autre serveur : ses réglages sont lus en base
         Tasks.async(plugin, sender, () -> directory.find(targetName).filter(NetworkPlayer::isOnline)
+                        .filter(target -> reply || vanish.canSee(sender, target.uuid()))
                         .map(target -> new Recipient(target.uuid(), target.name(),
                                 bypass || preferences.read(target.uuid()).privateMessages(), target.server())),
                 found -> found.ifPresentOrElse(

@@ -6,7 +6,7 @@ un plugin à part. Document développeur, à tenir à jour avec le code.
 
 ## Prérequis
 
-- **EterLib 1.8.0+** (`depend`, textes communs, cadre des menus, bus réseau, `Money`). `server-display-name` d'EterLib est le nom de serveur montré dans le chat ; la complétion des pseudos avec Tab vient d'EterLib (`OnlineNames`).
+- **EterLib 1.9.1+** (`depend`, textes communs, cadre des menus, bus réseau, `Money`). `server-display-name` d'EterLib est le nom de serveur montré dans le chat ; la complétion des pseudos avec Tab vient d'EterLib (`OnlineNames`).
 - **Redis** (obligatoire, via EterLib) : le chat et les messages privés traversent les serveurs.
 - **LuckPerms facultatif** : préfixe et suffixe du grade (codes `&` ou MiniMessage). Un **badge** (étiquette EterLib
   `badge`, posée par EterClan : le tag du clan) remplace le préfixe du grade.
@@ -26,7 +26,8 @@ qui l'annule avant garde le dernier mot) et passe le texte à `ChatService` :
 3. **Côté destinataire**, la ligne est composée dans **sa** langue (`lang/` > `chat.global`, `chat.staff`, `private.*`).
    Le pseudo porte une fiche au survol (serveur) et un clic prépare `/msg`.
 
-Messages privés : le destinataire est cherché sur ce serveur, sinon dans `eter_players` (présence réseau). Le serveur
+Messages privés : le destinataire est cherché sur ce serveur, sinon dans `eter_players` (présence réseau). Un
+invisible (vanish du staff, EterLib) est « hors ligne » pour qui ne peut pas le voir, sauf pour lui répondre (`/r`). Le serveur
 du destinataire lui affiche le message et retient l'expéditeur pour `/r` (copié dans Redis, `chat:reply:<uuid>`,
 1 h, pour suivre le joueur d'un serveur à l'autre). Les espions (`/socialspy`) de chaque serveur le voient aussi ;
 la console du serveur d'origine le journalise.
