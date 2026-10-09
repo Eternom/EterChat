@@ -1,5 +1,6 @@
 plugins {
     id("java-library")
+    id("maven-publish")
 }
 
 repositories {
@@ -16,9 +17,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:26.2.build.129-stable")
 
     // Socle commun : base, Redis, langues, joueurs du réseau (plugin EterLib installé sur le serveur)
-    compileOnly("com.github.Eternom:EterLib:1.9.1")
-    // Grades dans le chat (facultatif)
-    compileOnly("net.luckperms:api:5.5")
+    compileOnly("com.github.Eternom:EterLib:1.10.3")
 }
 
 java {
@@ -53,3 +52,13 @@ val deployPlugin by tasks.registering(Copy::class) {
     }
 }
 tasks.build { finalizedBy(deployPlugin) }
+
+// Publié pour les autres plugins (son API, fr.eternom.eterChat.api) : compileOnly("com.github.Eternom:EterChat:<tag>")
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = "EterChat"
+            from(components["java"])
+        }
+    }
+}

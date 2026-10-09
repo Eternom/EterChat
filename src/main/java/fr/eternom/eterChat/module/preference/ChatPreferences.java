@@ -58,8 +58,6 @@ public class ChatPreferences {
                 Column.of("notifications", Column.Type.BOOLEAN).notNull(),
                 Column.of("social_spy", Column.Type.BOOLEAN).notNull(),
                 Column.of("private_messages", Column.Type.BOOLEAN).notNull());
-        // Ajoutée en 1.1.0 : NULL pour les joueurs déjà enregistrés = messages privés acceptés
-        database.addColumn(PLAYERS, Column.of("private_messages", Column.Type.BOOLEAN));
         database.createTable(IGNORES,
                 Column.of("owner", Column.Type.UUID).primaryKey(),
                 Column.of("target", Column.Type.UUID).primaryKey(),
@@ -83,6 +81,12 @@ public class ChatPreferences {
     public boolean isIgnoring(UUID player, UUID sender) {
         Map<UUID, String> ignored = ignores.get(player);
         return ignored != null && ignored.containsKey(sender);
+    }
+
+    /** Bloquant (base) : player ignore-t-il sender, même s'il n'est pas connecté ici ? */
+    public boolean readIgnoring(UUID player, UUID sender) {
+        return ignores.containsKey(player) ? isIgnoring(player, sender)
+                : database.getFirst(IGNORES, Map.of("owner", player, "target", sender)).isPresent();
     }
 
     /** Joueurs ignorés par le joueur : uuid -> pseudo. */

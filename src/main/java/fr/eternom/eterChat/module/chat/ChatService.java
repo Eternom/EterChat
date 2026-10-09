@@ -1,14 +1,14 @@
 package fr.eternom.eterChat.module.chat;
 
 import fr.eternom.eterChat.module.chat.ChatMessage.Type;
-import fr.eternom.eterChat.module.chat.Ranks.Rank;
+import fr.eternom.eterLib.module.rank.Ranks;
+import fr.eternom.eterLib.module.rank.Ranks.Rank;
 import fr.eternom.eterChat.module.preference.ChatPreferences;
 import fr.eternom.eterLib.EterLib;
 import fr.eternom.eterLib.helper.cache.RedisCache;
 import fr.eternom.eterLib.helper.cache.NetworkBus;
 import fr.eternom.eterLib.helper.message.Messages;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -27,7 +27,7 @@ import java.util.logging.Level;
  * Envoi et réception des messages du chat (global, staff, privés) sur tout le réseau.
  *
  * Chaque message est d'abord distribué sur ce serveur, puis envoyé aux autres par le bus réseau d'EterLib (canal
- * "eterchat", type "chat" ; le serveur d'origine ignore le sien). Si Redis est désactivé ou en panne, le chat continue donc de fonctionner sur chaque serveur.
+ * "eterchat", type "chat" ; le serveur d'origine ignore le sien). Redis en panne : le chat continue sur chaque serveur.
  */
 public class ChatService {
 
@@ -36,7 +36,6 @@ public class ChatService {
 
     private static final String CHAT = "chat";
     /** Étiquette EterLib qui remplace le grade (posée par EterClan : le tag du clan). */
-    private static final String BADGE = "badge";
     /** Voir et écrire au chat de la prison depuis ailleurs (et inversement) : le staff. */
     public static final String PRISON_PERMISSION = "eterchat.prisonchat.see";
     private static final Duration REPLY_TTL = Duration.ofHours(1);
@@ -83,12 +82,10 @@ public class ChatService {
 
     /** Thread principal : met en forme le texte et le grade de l'expéditeur. */
     public ChatMessage create(Player sender, Type type, String text, UUID target, String targetName) {
+        // Le grade affiché d'EterLib : LuckPerms, avec le badge (tag de clan...) à la place du préfixe
         Rank rank = ranks.of(sender);
-        // Un badge posé par un plugin (étiquette EterLib « badge » : tag de clan...) remplace le grade
-        String badge = EterLib.get().getPlayerTags().get(sender, BADGE);
-        Component prefix = badge == null || badge.isBlank() ? rank.prefix() : messages.render(badge, TagResolver.empty());
         return new ChatMessage(type, serverName, serverDisplayName, sender.getUniqueId(), sender.getName(),
-                prefix, rank.suffix(), formatter.body(sender, text), target, targetName);
+                rank.prefix(), rank.suffix(), formatter.body(sender, text), target, targetName);
     }
 
     /** Thread principal : distribue ici, puis aux autres serveurs. */

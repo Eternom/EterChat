@@ -7,7 +7,6 @@ load: POSTWORLD
 authors: [ NadTum ]
 description: Chat du réseau (global, staff) et messages privés entre serveurs.
 depend: [EterLib]
-softdepend: [LuckPerms]
 
 commands:
   msg:

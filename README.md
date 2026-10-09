@@ -6,10 +6,10 @@ un plugin à part. Document développeur, à tenir à jour avec le code.
 
 ## Prérequis
 
-- **EterLib 1.9.1+** (`depend`, textes communs, cadre des menus, bus réseau, `Money`). `server-display-name` d'EterLib est le nom de serveur montré dans le chat ; la complétion des pseudos avec Tab vient d'EterLib (`OnlineNames`).
+- **EterLib 1.10.0+** (`depend`, textes communs, cadre des menus, bus réseau, `Money`). `server-display-name` d'EterLib est le nom de serveur montré dans le chat ; la complétion des pseudos avec Tab vient d'EterLib (`OnlineNames`).
 - **Redis** (obligatoire, via EterLib) : le chat et les messages privés traversent les serveurs.
-- **LuckPerms facultatif** : préfixe et suffixe du grade (codes `&` ou MiniMessage). Un **badge** (étiquette EterLib
-  `badge`, posée par EterClan : le tag du clan) remplace le préfixe du grade.
+- **Grade** : celui d'EterLib (`lib.getRanks()`) : préfixe et suffixe LuckPerms (facultatif), le **badge** (tag du clan,
+  posé par EterClan) à la place du préfixe ; la même règle partout (Tab, pseudo, sidebar).
 
 ## Fonctionnement
 
@@ -72,3 +72,9 @@ ouvre une confirmation (Dialog) pour ne plus l'ignorer ; « Ignorer un joueur »
 - `eterchat_players` : `uuid`, `staff_channel`, `notifications`, `social_spy`, `private_messages` (lus à l'arrivée,
   gardés en mémoire). `private_messages` ajoutée en 1.1.0 : `NULL` = acceptés.
 - `eterchat_ignores` : `owner`, `target`, `target_name`. Le canal staff ne s'ignore pas.
+
+## API (pour les autres plugins)
+
+`fr.eternom.eterChat.api.ChatApi` (`ChatApi.get()`) : personne d'autre ne lit les tables `eterchat_*`.
+
+- `isIgnoring(joueur, autre)`, `acceptsPrivateMessages(joueur)` (bloquant : hors du thread principal).

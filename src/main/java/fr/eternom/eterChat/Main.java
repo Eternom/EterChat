@@ -4,19 +4,21 @@ import fr.eternom.eterChat.listeners.Commands;
 import fr.eternom.eterChat.listeners.Events;
 import fr.eternom.eterChat.module.chat.ChatFormatter;
 import fr.eternom.eterChat.module.chat.ChatService;
-import fr.eternom.eterChat.module.chat.Ranks;
 import fr.eternom.eterChat.module.gui.ChatGui;
 import fr.eternom.eterChat.module.message.PrivateMessages;
 import fr.eternom.eterChat.module.preference.ChatPreferences;
 import fr.eternom.eterChat.module.preference.PreferenceActions;
 import fr.eternom.eterLib.EterLib;
 import fr.eternom.eterLib.helper.message.Messages;
+import fr.eternom.eterChat.api.ChatApi;
+import fr.eternom.eterChat.module.preference.ChatApiService;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
 
     /** Version minimale d'EterLib : textes communs et outils partagés (Frame, Money, NetworkBus) depuis 1.6.0. */
-    private static final String REQUIRED_ETERLIB = "1.9.1";
+    private static final String REQUIRED_ETERLIB = "1.10.0";
 
     /** Préfixe des tables d'EterChat dans la base commune : eterchat_players, eterchat_ignores. */
     private static final String TABLE_PREFIX = "eterchat_";
@@ -45,17 +47,19 @@ public final class Main extends JavaPlugin {
         messages = lib.messages(this, "en_us", "fr_fr");
         preferences = new ChatPreferences(lib.database(TABLE_PREFIX));
 
-        Ranks ranks = Ranks.load();
-        chat = new ChatService(this, messages, new ChatFormatter(messages), ranks, preferences,
+        chat = new ChatService(this, messages, new ChatFormatter(messages), lib.getRanks(), preferences,
                 lib.network(this, "eterchat", messages), lib.getRedis(), lib.getServerName(), lib.getServerDisplayName());
         chat.start();
         privateMessages = new PrivateMessages(this, chat, preferences, lib.getPlayers(), messages);
         actions = new PreferenceActions(this, preferences, lib.getPlayers(), messages);
         gui = new ChatGui(this, preferences, actions, messages, lib.backButton(getConfig().getString("menus.chat.back-command", "")));
 
+        // API pour les autres plugins (ChatApi.get())
+        getServer().getServicesManager().register(ChatApi.class, new ChatApiService(preferences), this, ServicePriority.Normal);
+
         new Commands(this);
         new Events(this);
-        getLogger().info("Chat relié à tout le réseau" + (ranks.isAvailable() ? ", grades LuckPerms" : ", sans LuckPerms"));
+        getLogger().info("Chat relié à tout le réseau");
     }
 
     public Messages getMessages() {
