@@ -16,4 +16,4 @@ prison:
 # les menus entre eux (ex : "profile" pour revenir au menu du profil) ; vide, il ferme le menu.
 menus:
   chat:
-    back-command: ""
+    back-command: "menu social"
