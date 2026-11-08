@@ -65,10 +65,24 @@ public class ChatFormatter {
                 Placeholder.component("prefix", message.prefix()),
                 Placeholder.component("suffix", message.suffix()),
                 Placeholder.component("name", nameCard(receiver, message.senderName(), message.server())),
-                Placeholder.component("message", message.body()),
+                Placeholder.component("message", reportable(receiver, key, message)),
                 Placeholder.unparsed("server", message.server()),
                 Placeholder.unparsed("target", message.targetName() == null ? "" : message.targetName()));
         return messages.render(raw, tags);
+    }
+
+    /**
+     * Chat global, vu par un autre joueur : un clic sur le message le signale (/report de EterModeration, qui joint les
+     * derniers messages de l'auteur). Un message qui a déjà son propre clic ([item]...) le garde.
+     */
+    private Component reportable(CommandSender receiver, String key, ChatMessage message) {
+        Component body = message.body();
+        if (!"chat.global".equals(key) || !(receiver instanceof Player player) || player.getUniqueId().equals(message.sender())
+                || body.clickEvent() != null || message.senderName() == null) {
+            return body;
+        }
+        return body.hoverEvent(HoverEvent.showText(messages.get(receiver, "chat.report-hover", "name", message.senderName())))
+                .clickEvent(ClickEvent.runCommand("/report " + message.senderName()));
     }
 
     /** true si le texte contient @name (sans tenir compte des majuscules). */

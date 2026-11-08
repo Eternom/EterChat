@@ -12,6 +12,8 @@
 chat:
   global: "<prefix><name><suffix> <dark_gray>»</dark_gray> <white><message>"
   staff: "<primary><bold>Staff</bold></primary> <dark_gray>· <info><server></info> · <accent><name></accent> »</dark_gray> <white><message>"
+  # Hovering a global chat message (another player): a click reports it to the staff
+  report-hover: "<accent>Click <dark_gray>· <info>report this message from <accent><name></accent> to the staff"
   # Card shown when hovering a player name
   hover:
     - "<accent><name>"

@@ -49,6 +49,8 @@ Autres : `eterchat.color` (couleurs dans ses messages, personne par défaut), `e
 `eterchat.bypass.msgtoggle` (écrire à un joueur qui refuse les messages privés : le staff doit pouvoir joindre
 n'importe qui). `eterchat.admin` regroupe tout (op par défaut).
 
+Un clic sur un message du chat global (d'un autre joueur) le signale au staff : `/report <auteur>` d'EterModeration (1.4.0).
+
 Plus de chat de prison depuis 1.3.0 (la prison est supprimée du réseau) : la clé `prison.server-prefix` d'une ancienne
 config est ignorée.
 

@@ -12,6 +12,8 @@
 chat:
   global: "<prefix><name><suffix> <dark_gray>»</dark_gray> <white><message>"
   staff: "<primary><bold>Staff</bold></primary> <dark_gray>· <info><server></info> · <accent><name></accent> »</dark_gray> <white><message>"
+  # Survol d'un message du chat global (un autre joueur) : un clic le signale au staff
+  report-hover: "<accent>Clic <dark_gray>· <info>signaler ce message de <accent><name></accent> au staff"
   # Fiche au survol du pseudo
   hover:
     - "<accent><name>"
