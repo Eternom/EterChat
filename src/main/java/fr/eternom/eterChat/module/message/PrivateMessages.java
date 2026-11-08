@@ -50,8 +50,7 @@ public class PrivateMessages {
     }
 
     /**
-     * reply : une réponse (/r) passe même entre la prison et le reste du réseau, pour répondre au staff qui a écrit ;
-     * sinon un prisonnier n'écrit qu'aux prisonniers, et seul le staff écrit en prison.
+     * reply : une réponse (/r), qui atteint aussi un invisible (le staff qui a écrit).
      */
     private void send(Player sender, String targetName, String text, boolean reply) {
         boolean bypass = sender.hasPermission(BYPASS_PERMISSION);
@@ -88,11 +87,6 @@ public class PrivateMessages {
     private void deliver(Player sender, Recipient recipient, String text, boolean reply) {
         if (recipient.uuid().equals(sender.getUniqueId())) {
             messages.send(sender, "private.self");
-            return;
-        }
-        boolean crossesPrison = chat.isPrison(chat.serverName()) != chat.isPrison(recipient.server());
-        if (crossesPrison && !reply && !sender.hasPermission(ChatService.PRISON_PERMISSION)) {
-            messages.send(sender, "private.prison-blocked", "player", recipient.name());
             return;
         }
         if (!recipient.accepts()) {
