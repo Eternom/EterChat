@@ -70,7 +70,7 @@ dialog:
   ignore:
     title: "<primary>Ignore a player"
     body: "You won't see their messages anymore, neither in chat nor in private. They won't be told."
-    name: "Player name"
+    name: "Exact player name"
     confirm: "Ignore"
   unignore:
     title: "<primary>Stop ignoring"

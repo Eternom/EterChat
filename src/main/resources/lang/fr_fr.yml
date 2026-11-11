@@ -70,7 +70,7 @@ dialog:
   ignore:
     title: "<primary>Ignorer un joueur"
     body: "Tu ne verras plus ses messages, ni dans le chat ni en privé. Il n'en sera pas averti."
-    name: "Pseudo"
+    name: "Pseudo exact"
     confirm: "Ignorer"
   unignore:
     title: "<primary>Ne plus ignorer"
