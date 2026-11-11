@@ -1,5 +1,7 @@
 package fr.eternom.eterChat.module.gui;
 
+import fr.eternom.eterLib.EterLib;
+import fr.eternom.eterLib.helper.gui.BackButton;
 import fr.eternom.eterLib.helper.gui.Frame;
 import fr.eternom.eterLib.helper.gui.Items;
 import fr.eternom.eterLib.helper.gui.Menu;
@@ -48,6 +50,8 @@ class IgnoredMenu implements Menu {
     private final List<Ignored> ignored;
     private final Inventory inventory;
     private final Map<Integer, Ignored> ignoredAtSlot = new HashMap<>();
+    // Retour : d'où il vient (/menu > Social, réglages du chat) ; chemin inconnu : les réglages du chat
+    private final BackButton back = EterLib.get().backButton("chat");
     private int page;
 
     IgnoredMenu(ChatGui gui, Player viewer) {
@@ -77,8 +81,7 @@ class IgnoredMenu implements Menu {
             Sounds.page(player);
             render();
         } else if (slot == BACK) {
-            Sounds.page(player);
-            gui.open(player);
+            back.click(player);
         } else if (slot == ADD || slot == EMPTY && ignored.isEmpty()) {
             Sounds.click(player);
             gui.askIgnore(player);
@@ -113,7 +116,7 @@ class IgnoredMenu implements Menu {
         if (hasNextPage()) {
             inventory.setItem(NEXT, Items.item(Material.ARROW, text("gui.next"), List.of(pageLine(page + 2))));
         }
-        inventory.setItem(BACK, Items.item(Material.OAK_DOOR, text("gui.back"), List.of()));
+        inventory.setItem(BACK, back.item(viewer));
         inventory.setItem(ADD, Items.item(Material.NAME_TAG, text("gui.ignored-menu.add"), List.of(text("gui.ignored-menu.add-lore"))));
     }
 
