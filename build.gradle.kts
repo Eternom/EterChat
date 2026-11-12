@@ -25,6 +25,8 @@ dependencies {
 
     // Socle commun : base, Redis, langues, joueurs du réseau (plugin EterLib installé sur le serveur)
     compileOnly("com.github.Eternom:EterLib:1.20.1")
+    // Chat de clan : le clan du joueur (API EterClan, facultative sur le serveur)
+    compileOnly("com.github.Eternom:EterClan:1.9.0")
 }
 
 java {

@@ -1,6 +1,7 @@
 package fr.eternom.eterChat.listeners;
 
 import fr.eternom.eterChat.Main;
+import fr.eternom.eterChat.module.chat.ClanChatCommand;
 import fr.eternom.eterChat.module.chat.StaffChatCommand;
 import fr.eternom.eterChat.module.gui.ChatMenuCommand;
 import fr.eternom.eterChat.module.message.MessageCommand;
@@ -27,6 +28,7 @@ public class Commands {
         register(main, "notifications", new ToggleCommand(main.getActions(), main.getMessages(), Setting.NOTIFICATIONS));
         register(main, "socialspy", new ToggleCommand(main.getActions(), main.getMessages(), Setting.SOCIAL_SPY));
         register(main, "staffchat", new StaffChatCommand(main.getChat(), main.getActions(), main.getMessages()));
+        register(main, "clanchat", new ClanChatCommand(main, main.getChat(), main.getMessages()));
         register(main, "chat", new ChatMenuCommand(main.getGui(), main.getMessages()));
     }
 

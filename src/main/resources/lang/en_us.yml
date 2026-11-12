@@ -12,6 +12,8 @@
 chat:
   global: "<prefix><name><suffix> <dark_gray>»</dark_gray> <white><message>"
   staff: "<primary><bold>Staff</bold></primary> <dark_gray>· <info><server></info> · <accent><name></accent> »</dark_gray> <white><message>"
+  # Clan chat (/c): <target> = clan tag
+  clan: "<green>[<target>]</green> <dark_gray>· <info><server></info> · <accent><name></accent> »</dark_gray> <white><message>"
   # Hovering a global chat message (another player): a click reports it to the staff
   report-hover: "<accent>Click <dark_gray>· <info>report this message from <accent><name></accent> to the staff"
   # Card shown when hovering a player name
@@ -60,6 +62,12 @@ notifications:
 socialspy:
   enabled: "<info>Private message spy <success>enabled</success>."
   disabled: "<info>Private message spy <error>disabled</error>."
+
+clan-chat:
+  usage: "<error>Type your message: <accent>/c Hello!</accent> (your clan members get it, on the whole network)."
+  none: "<error>You have no clan: open <accent><click:run_command:'/clan'>/clan</click></accent> to join one."
+  unavailable: "<error>Clan chat isn't available here."
+
 
 staff:
   enabled: "<info>Your chat now goes to the <accent>staff</accent> channel. <dark_gray>(</dark_gray><accent>/sc</accent> <info>to switch back</info><dark_gray>)"

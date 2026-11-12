@@ -7,6 +7,7 @@ load: POSTWORLD
 authors: [ NadTum ]
 description: Chat du réseau (global, staff) et messages privés entre serveurs.
 depend: [EterLib]
+softdepend: [EterClan]
 
 commands:
   msg:
@@ -36,6 +37,10 @@ commands:
     usage: /socialspy
     aliases: [spy]
     permission: eterchat.socialspy
+  clanchat:
+    description: Un message aux membres de ton clan, sur tout le réseau.
+    usage: /clanchat <message>
+    aliases: [c]
   staffchat:
     description: Un message au staff ; seul, envoie tout le chat au staff (ou revient au global).
     usage: /staffchat [message]

@@ -12,6 +12,8 @@
 chat:
   global: "<prefix><name><suffix> <dark_gray>»</dark_gray> <white><message>"
   staff: "<primary><bold>Staff</bold></primary> <dark_gray>· <info><server></info> · <accent><name></accent> »</dark_gray> <white><message>"
+  # Chat de clan (/c) : <target> = tag du clan
+  clan: "<green>[<target>]</green> <dark_gray>· <info><server></info> · <accent><name></accent> »</dark_gray> <white><message>"
   # Survol d'un message du chat global (un autre joueur) : un clic le signale au staff
   report-hover: "<accent>Clic <dark_gray>· <info>signaler ce message de <accent><name></accent> au staff"
   # Fiche au survol du pseudo
@@ -60,6 +62,12 @@ notifications:
 socialspy:
   enabled: "<info>Espion des messages privés <success>activé</success>."
   disabled: "<info>Espion des messages privés <error>désactivé</error>."
+
+clan-chat:
+  usage: "<error>Écris ton message : <accent>/c Salut !</accent> (le reçoivent les membres de ton clan, sur tout le réseau)."
+  none: "<error>Tu n'as pas de clan : ouvre <accent><click:run_command:'/clan'>/clan</click></accent> pour en rejoindre un."
+  unavailable: "<error>Le chat de clan n'est pas disponible ici."
+
 
 staff:
   enabled: "<info>Ton chat part maintenant au <accent>staff</accent>. <dark_gray>(</dark_gray><accent>/sc</accent> <info>pour revenir</info><dark_gray>)"

@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -78,7 +79,14 @@ public class ChatService {
         // Le grade affiché d'EterLib : LuckPerms, avec le badge (tag de clan...) à la place du préfixe
         Rank rank = ranks.of(sender);
         return new ChatMessage(type, serverName, serverDisplayName, sender.getUniqueId(), sender.getName(),
-                rank.prefix(), rank.suffix(), formatter.body(sender, text), target, targetName);
+                rank.prefix(), rank.suffix(), formatter.body(sender, text), target, targetName, null);
+    }
+
+    /** Thread principal : un message au clan (tag), pour ses membres sur tout le réseau. */
+    public void clan(Player sender, String text, String tag, List<UUID> members) {
+        Rank rank = ranks.of(sender);
+        send(new ChatMessage(Type.CLAN, serverName, serverDisplayName, sender.getUniqueId(), sender.getName(),
+                rank.prefix(), rank.suffix(), formatter.body(sender, text), null, tag, members));
     }
 
     /** Thread principal : distribue ici, puis aux autres serveurs. */
@@ -132,6 +140,7 @@ public class ChatService {
             case GLOBAL -> deliverGlobal(message);
             case STAFF -> deliverStaff(message);
             case PRIVATE -> deliverPrivate(message);
+            case CLAN -> deliverClan(message);
         }
     }
 
@@ -159,6 +168,22 @@ public class ChatService {
             }
         }
         Bukkit.getConsoleSender().sendMessage(line(Bukkit.getConsoleSender(), "chat.staff", message));
+    }
+
+    /** Chat de clan : aux membres présents ici. La console du serveur d'origine en garde une trace. */
+    private void deliverClan(ChatMessage message) {
+        if (message.members() == null) {
+            return;
+        }
+        for (UUID member : message.members()) {
+            Player player = Bukkit.getPlayer(member);
+            if (player != null) {
+                player.sendMessage(line(player, "chat.clan", message));
+            }
+        }
+        if (message.origin().equals(serverName)) {
+            Bukkit.getConsoleSender().sendMessage(line(Bukkit.getConsoleSender(), "chat.clan", message));
+        }
     }
 
     /** Au destinataire s'il est ici (et ne l'ignore pas), et aux espions d'ici. L'expéditeur a déjà sa copie. */
