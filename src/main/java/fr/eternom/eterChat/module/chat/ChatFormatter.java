@@ -100,11 +100,16 @@ public class ChatFormatter {
         return false;
     }
 
-    /** Pseudo avec sa fiche au survol (serveur) ; un clic prépare /msg. */
+    /**
+     * Pseudo avec sa fiche au survol (serveur) ; un clic ouvre sa fiche de /menu (EterEssential : message, tpa, ami,
+     * ignorer, signaler...), ou prépare /msg sans EterEssential.
+     */
     private Component nameCard(CommandSender receiver, String name, String server) {
+        boolean profile = org.bukkit.Bukkit.getPluginCommand("menu") != null;
         return Component.text(name)
-                .hoverEvent(HoverEvent.showText(messages.get(receiver, "chat.hover", "name", name, "server", server)))
-                .clickEvent(ClickEvent.suggestCommand("/msg " + name + " "));
+                .hoverEvent(HoverEvent.showText(messages.get(receiver, profile ? "chat.hover-profile" : "chat.hover",
+                        "name", name, "server", server)))
+                .clickEvent(profile ? ClickEvent.runCommand("/menu player " + name) : ClickEvent.suggestCommand("/msg " + name + " "));
     }
 
     private static boolean isNameChar(char c) {

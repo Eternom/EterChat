@@ -29,6 +29,10 @@ public class PrivateMessages {
     private record Recipient(UUID uuid, String name, boolean accepts, String server) {
     }
 
+    /** Un pas entre deux courriers d'un même joueur (anti-spam des boîtes). */
+    private static final long MAIL_COOLDOWN_MILLIS = 10_000;
+    private final java.util.Map<UUID, Long> lastMail = new java.util.concurrent.ConcurrentHashMap<>();
+
     private final JavaPlugin plugin;
     private final ChatService chat;
     private final ChatPreferences preferences;
@@ -63,15 +67,49 @@ public class PrivateMessages {
                     chat.serverName()), text, reply);
             return;
         }
-        // Destinataire sur un autre serveur : ses réglages sont lus en base
-        Tasks.async(plugin, sender, () -> directory.find(targetName).filter(NetworkPlayer::isOnline)
-                        .filter(target -> reply || vanish.canSee(sender, target.uuid()))
-                        .map(target -> new Recipient(target.uuid(), target.name(),
-                                bypass || preferences.read(target.uuid()).privateMessages(), target.server())),
+        // Destinataire sur un autre serveur : ses réglages sont lus en base. Hors ligne (ou invisible pour l'expéditeur) :
+        // un courrier (server null), s'il accepte les messages privés et n'ignore pas l'expéditeur
+        UUID senderId = sender.getUniqueId();
+        Tasks.async(plugin, sender, () -> directory.find(targetName).map(target -> {
+                    boolean accepts = bypass || preferences.read(target.uuid()).privateMessages();
+                    if (target.isOnline() && (reply || vanish.canSee(sender, target.uuid()))) {
+                        return new Recipient(target.uuid(), target.name(), accepts, target.server());
+                    }
+                    return new Recipient(target.uuid(), target.name(),
+                            accepts && !preferences.readIgnoring(target.uuid(), senderId), null);
+                }),
                 found -> found.ifPresentOrElse(
-                        recipient -> deliver(sender, recipient, text, reply),
+                        recipient -> {
+                            if (recipient.server() == null) {
+                                mail(sender, recipient, text);
+                            } else {
+                                deliver(sender, recipient, text, reply);
+                            }
+                        },
                         () -> messages.send(sender, "private.offline", "player", targetName)),
                 () -> messages.send(sender, "private.error"));
+    }
+
+    /** Thread principal : un courrier pour un joueur hors ligne, gardé dans sa boîte (/inbox) et annoncé à sa connexion. */
+    private void mail(Player sender, Recipient recipient, String text) {
+        if (recipient.uuid().equals(sender.getUniqueId())) {
+            messages.send(sender, "private.self");
+            return;
+        }
+        if (!recipient.accepts()) {
+            messages.send(sender, "private.disabled", "player", recipient.name());
+            return;
+        }
+        long now = System.currentTimeMillis();
+        Long last = lastMail.get(sender.getUniqueId());
+        if (last != null && now - last < MAIL_COOLDOWN_MILLIS) {
+            messages.send(sender, "private.mail-wait", "seconds",
+                    String.valueOf((MAIL_COOLDOWN_MILLIS - (now - last) + 999) / 1000));
+            return;
+        }
+        lastMail.put(sender.getUniqueId(), now);
+        chat.bus().notify(recipient.uuid(), "private.mail", true, "player", sender.getName(), "message", text);
+        messages.send(sender, "private.mail-sent", "player", recipient.name(), "message", text);
     }
 
     /** Thread principal : répond au dernier correspondant. */

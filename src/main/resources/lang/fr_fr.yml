@@ -22,6 +22,12 @@ chat:
     - "<dark_gray>▸ <info>Serveur : <accent><server>"
     - ""
     - "<accent>Clic <dark_gray>· <info>lui écrire en privé"
+  # Même fiche quand EterEssential est là : un clic ouvre sa fiche de /menu (message, tpa, ami, ignorer, signaler...)
+  hover-profile:
+    - "<accent><name>"
+    - "<dark_gray>▸ <info>Serveur : <accent><server>"
+    - ""
+    - "<accent>Clic <dark_gray>· <info>message, téléportation, ami, ignorer, signaler..."
   # Une mention (@Pseudo) dans un message
   mention: "<accent><mention></accent>"
   # Barre d'action du joueur mentionné
@@ -33,7 +39,10 @@ private:
   spy: "<dark_gray>[Espion] <info><name> → <target></info> »</dark_gray> <gray><message>"
   usage: '<error>Utilisation : <accent>/msg \<joueur> \<message>'
   reply-usage: '<error>Utilisation : <accent>/r \<message>'
-  offline: "<error><accent><player></accent> n'est pas connecté."
+  offline: "<error>Joueur inconnu : <accent><player></accent>."
+  mail: "<accent>✉ <player></accent> <info>t'a écrit pendant ton absence : <white><message>"
+  mail-sent: "<info>✉ <accent><player></accent> <info>n'est pas connecté : ton message l'attend dans sa boîte <dark_gray>(/inbox)</dark_gray>."
+  mail-wait: "<error>Attends <accent><seconds> s</accent> avant d'envoyer un autre courrier."
   failed: "<error>Ton message n'a pas pu être transmis à <accent><player></accent> (liaison entre serveurs coupée). Réessaie dans un instant."
   disabled: "<error><accent><player></accent> n'accepte pas les messages privés."
   own-disabled: "<info>Tes messages privés sont coupés : <accent><player></accent> ne pourra pas te répondre. <dark_gray>(</dark_gray><accent>/msgtoggle</accent><dark_gray>)"

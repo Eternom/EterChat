@@ -101,6 +101,11 @@ public class ChatService {
         bus.publish(CHAT, message.toJson(), onFailure);
     }
 
+    /** Le bus réseau d'EterChat (notify : prévenir un joueur où qu'il soit, et le garder dans sa boîte /inbox). */
+    public fr.eternom.eterLib.helper.cache.NetworkBus bus() {
+        return bus;
+    }
+
     public String serverName() {
         return serverName;
     }

@@ -22,6 +22,12 @@ chat:
     - "<dark_gray>▸ <info>Server: <accent><server>"
     - ""
     - "<accent>Click <dark_gray>· <info>send a private message"
+  # Same card when EterEssential is there: a click opens their page of /menu (message, tpa, friend, ignore, report...)
+  hover-profile:
+    - "<accent><name>"
+    - "<dark_gray>▸ <info>Server: <accent><server>"
+    - ""
+    - "<accent>Click <dark_gray>· <info>message, teleport, friend, ignore, report..."
   # A mention (@Name) inside a message
   mention: "<accent><mention></accent>"
   # Action bar of the mentioned player
@@ -33,7 +39,11 @@ private:
   spy: "<dark_gray>[Spy] <info><name> → <target></info> »</dark_gray> <gray><message>"
   usage: '<error>Usage: <accent>/msg \<player> \<message>'
   reply-usage: '<error>Usage: <accent>/r \<message>'
-  offline: "<error><accent><player></accent> is not online."
+  offline: "<error>Unknown player: <accent><player></accent>."
+  # Mail: /msg to an offline player, kept in their box (/inbox) and announced when they join
+  mail: "<accent>✉ <player></accent> <info>wrote to you while you were away: <white><message>"
+  mail-sent: "<info>✉ <accent><player></accent> is offline: your message waits in their box <dark_gray>(/inbox)</dark_gray>."
+  mail-wait: "<error>Wait <accent><seconds> s</accent> before sending another mail."
   failed: "<error>Your message could not be delivered to <accent><player></accent> (link between servers is down). Try again in a moment."
   disabled: "<error><accent><player></accent> doesn't accept private messages."
   own-disabled: "<info>Your private messages are blocked: <accent><player></accent> won't be able to reply. <dark_gray>(</dark_gray><accent>/msgtoggle</accent><dark_gray>)"
